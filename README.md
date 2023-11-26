@@ -15,7 +15,7 @@ OT1. Explain the fundamental elements involved in the design of the software arc
 
 This approach must recognize the responsibility assumed when designing the system architecture, in the scope of the proposed solution and the tradeoffs involved, considering professional ethics.
 
-OT2. Derive a first version of software architecture from the analysis of given requirements, specifying it in a standardized UML notation. This analysis involves identifying architecturally significant requirements (RAS) established by stakeholders, and selecting architectural drivers based on the prioritization of said RAS.
+OT2. Derive a first version of software architecture from the analysis of given requirements, specifying it in a standardized UML notation. This analysis involves identifying architecturally significant requirements (ASR) established by stakeholders, and selecting architectural drivers based on the prioritization of said RAS.
 
 In the process of this derivation, both the commitments (tradeoffs) and responsibilities that a software architect assumes with stakeholders and with society in general must be recognized, when prioritizing a subset of the RAS considered; also recognize the scope and impact that these have on the overall design of the system and its quality attributes.
 

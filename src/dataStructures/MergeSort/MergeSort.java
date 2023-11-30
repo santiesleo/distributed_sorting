@@ -4,12 +4,12 @@ import java.util.Arrays;
 
 public class MergeSort<T extends Comparable<T>> {
 
-    public String sort(T[] array) {
+    public T[] sort(T[] array) {
         if (array == null || array.length <= 1) {
-            return Arrays.toString(array);
+            return array;
         }
         mergeSort(array, 0, array.length - 1);
-        return Arrays.toString(array);
+        return array;
     }
 
     private void mergeSort(T[] array, int left, int right) {

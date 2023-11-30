@@ -3,12 +3,13 @@ import dataStructures.MergeSort.MergeSort;
 import java.io.*;
 import java.util.Arrays;
 import java.util.Scanner;
+import threadPool.*;
 
 public class Main {
 
     public static void main(String[] args) {
         // Crea un objeto de la clase Mergesort
-        MergeSort<String> ms = new MergeSort<>();
+        // MergeSort<String> ms = new MergeSort<>();
 
         // Solicitar al usuario el nombre del archivo de datos
         Scanner scanner = new Scanner(System.in);
@@ -21,11 +22,12 @@ public class Main {
 
         // Invocar al método dist_sorter (reemplaza esto con tu lógica específica)
         // Aquí simulamos una llamada ficticia
-        ms.sort(data);
+        ThreadPool threadPool = new ThreadPool(data);
+        threadPool.execute();
 
         // Escribir el resultado ordenado en un nuevo archivo de texto
         String outputFilePath = "doc/sorted_" + fileName;
-        writeDataToFile(outputFilePath, data);
+        writeDataToFile(outputFilePath, threadPool.getSorted());
 
         long endTime = System.currentTimeMillis();
         long latency = endTime - startTime;

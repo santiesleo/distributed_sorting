@@ -1,16 +1,62 @@
 import dataStructures.MergeSort.MergeSort;
 
-public class Main {
-    public static void main(String[] args) {
-        // Ejemplo de uso con enteros
-        String[] array = {"12", "6", "12", "5", "13", "7", "11"};
-        MergeSort<String> mergeSort = new MergeSort<>();
-        mergeSort.sort(array);
+import java.io.*;
+import java.util.Arrays;
+import java.util.Scanner;
 
-        System.out.println("Arreglo ordenado:");
-        for (String element : array) {
-            System.out.print(element + " ");
+public class Main {
+
+    public static void main(String[] args) {
+        // Crea un objeto de la clase Mergesort
+        MergeSort<String> ms = new MergeSort<>();
+
+        // Solicitar al usuario el nombre del archivo de datos
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Ingrese el nombre del archivo de datos: ");
+        String fileName = scanner.nextLine();
+        String[] data = readDataFromFile("doc/" + fileName);
+
+        // Medir la latencia del método dist_sorter
+        long startTime = System.currentTimeMillis();
+
+        // Invocar al método dist_sorter (reemplaza esto con tu lógica específica)
+        // Aquí simulamos una llamada ficticia
+        ms.sort(data);
+
+        // Escribir el resultado ordenado en un nuevo archivo de texto
+        String outputFilePath = "doc/sorted_" + fileName;
+        writeDataToFile(outputFilePath, data);
+
+        long endTime = System.currentTimeMillis();
+        long latency = endTime - startTime;
+
+        System.out.println("Latencia de dist_sorter: " + latency + " milisegundos");
+    }
+
+    private static String[] readDataFromFile(String fileName) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            StringBuilder content = new StringBuilder();
+
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+
+            return content.toString().trim().split("\\s+");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new String[0];
         }
     }
 
+    private static void writeDataToFile(String filePath, String[] data) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            // Write each element of the sorted data on a new line
+            for (String element : data) {
+                writer.write(element + "\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

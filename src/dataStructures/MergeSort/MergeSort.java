@@ -1,11 +1,15 @@
 package dataStructures.MergeSort;
+
+import java.util.Arrays;
+
 public class MergeSort<T extends Comparable<T>> {
 
-    public void sort(T[] array) {
+    public String sort(T[] array) {
         if (array == null || array.length <= 1) {
-            return;
+            return Arrays.toString(array);
         }
         mergeSort(array, 0, array.length - 1);
+        return Arrays.toString(array);
     }
 
     private void mergeSort(T[] array, int left, int right) {
@@ -64,4 +68,3 @@ public class MergeSort<T extends Comparable<T>> {
         }
     }
 }
-

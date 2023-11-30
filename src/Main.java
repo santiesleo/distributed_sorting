@@ -6,6 +6,9 @@ import java.util.Scanner;
 import threadPool.*;
 
 public class Main {
+    private static String fileName;
+    private static ThreadPool threadPool;
+    private static long startTime;
 
     public static void main(String[] args) {
         // Crea un objeto de la clase Mergesort
@@ -14,18 +17,21 @@ public class Main {
         // Solicitar al usuario el nombre del archivo de datos
         Scanner scanner = new Scanner(System.in);
         System.out.print("Ingrese el nombre del archivo de datos: ");
-        String fileName = scanner.nextLine();
+        fileName = scanner.nextLine();
         String[] data = readDataFromFile("doc/" + fileName);
 
         // Medir la latencia del método dist_sorter
-        long startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
 
         // Invocar al método dist_sorter (reemplaza esto con tu lógica específica)
         // Aquí simulamos una llamada ficticia
-        ThreadPool threadPool = new ThreadPool(data);
+        threadPool = new ThreadPool(data);
         threadPool.execute();
+    }
 
-        // Escribir el resultado ordenado en un nuevo archivo de texto
+    // observer
+    private static void notifyMain() {
+         // Escribir el resultado ordenado en un nuevo archivo de texto
         String outputFilePath = "doc/sorted_" + fileName;
         writeDataToFile(outputFilePath, threadPool.getSorted());
 

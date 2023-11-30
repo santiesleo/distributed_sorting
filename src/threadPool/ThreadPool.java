@@ -13,7 +13,7 @@ public class ThreadPool {
     private static String[] sortedBigData;
     private static int counter = 0;
     // Crear un "thread pool" con 16 hilos
-    private static int nThreads = 16;
+    private static int nThreads = 4;
     private static ExecutorService executorService;
     private static String[] sorted;
     private static List<String[]> arrays;

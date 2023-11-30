@@ -43,6 +43,8 @@ public class MergeSort<T extends Comparable<T>> {
 
         // Fusionar los subarreglos
         while (i < n1 && j < n2) {
+            System.out.println("\nleft: " + Arrays.toString(leftArray));
+            System.out.println("right: " + Arrays.toString(rightArray));
             if (((T) leftArray[i]).compareTo((T) rightArray[j]) >= 0) {
                 array[k] = (T) leftArray[i];
                 i++;

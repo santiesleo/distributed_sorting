@@ -14,8 +14,6 @@ public class WorkerThread implements Runnable {
     public void run() {
         MergeSort<String> ms = new MergeSort<>();
 
-        System.out.println(Thread.currentThread().getName() + " empieza la tarea");
-
         // Simular una tarea que lleva algún tiempo
         try {
             // devolvemos lo que ordenó este Thread al pool para que se encargue de juntarlo
@@ -23,7 +21,5 @@ public class WorkerThread implements Runnable {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-
-        System.out.println(Thread.currentThread().getName() + " completa la tarea");
     }
 }

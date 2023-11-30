@@ -1,3 +1,4 @@
+package main;
 import dataStructures.MergeSort.MergeSort;
 
 import java.io.*;
@@ -30,10 +31,10 @@ public class Main {
     }
 
     // observer
-    private static void notifyMain() {
+    public static void notifyMain() {
          // Escribir el resultado ordenado en un nuevo archivo de texto
         String outputFilePath = "doc/sorted_" + fileName;
-        writeDataToFile(outputFilePath, threadPool.getSorted());
+        // writeDataToFile(outputFilePath, threadPool.getSorted());
 
         long endTime = System.currentTimeMillis();
         long latency = endTime - startTime;

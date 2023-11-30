@@ -1,4 +1,5 @@
 package threadPool;
+import main.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,10 +16,10 @@ public class ThreadPool {
     private static int nThreads = 16;
     private static ExecutorService executorService;
     private static String[] sorted;
+    private static List<String[]> arrays;
 
     public ThreadPool(String[] bigData){
         this.bigData = bigData;
-        ThreadPool.sortedBigData = new String[nThreads];
     } 
 
     public String[] getSorted() {
@@ -27,12 +28,13 @@ public class ThreadPool {
 
     // thread notifica que ya está disponible - pasa el trabajo terminado
     public static void returnPool(String[] sorted) {
-        sortedBigData[counter] = Arrays.toString(sorted);
+        sortedBigData[counter] = Arrays.toString(sorted).substring(1, Arrays.toString(sorted).length()-1);
         counter++;
 
-        if (counter == nThreads - 1) {
+        if (counter == arrays.size() - 1) {
             MergeSort<String> ms = new MergeSort<>();
-            ThreadPool.sorted = ms.sort(sortedBigData);
+            //ThreadPool.sorted = ms.sort(sortedBigData);
+            Main.notifyMain();
             // Apagar el "thread pool" después de completar todas las tareas
             executorService.shutdown();
         }
@@ -40,7 +42,9 @@ public class ThreadPool {
 
     // ejecutar 
     public void execute() {
-        List<String[]> arrays = divideData(nThreads);
+        arrays = divideData(nThreads);
+        ThreadPool.sortedBigData = new String[arrays.size()];
+        System.out.println("ya seteo el sorted big data");
 
         executorService = Executors.newFixedThreadPool(nThreads);
         
@@ -50,23 +54,26 @@ public class ThreadPool {
 
         // Agregar tareas al "thread pool"
         for (int i = 0; i < arrays.size(); i++) {
+            System.out.println("entra a crear arrays pos " + i);
             Runnable worker = new WorkerThread(arrays.get(i));
             executorService.execute(worker);
         }
     }
 
     // divide el array grande en array de pequeños elementos
-    private List<String[]> divideData(int n) {
-        // divide el array en tantas posiciones diga 'n'
-        List<String[]> resultArrays = new ArrayList<>();
-        
-        for (int i = 0; i < bigData.length; i += n) {
-            int end = Math.min(bigData.length, i + n);
+    public List<String[]> divideData(int n) {
+        System.out.println("n = " + n);
+        List<String[]> dividedArrays = new ArrayList<>();
+        int totalElements = bigData.length;
+        int chunkSize = (int) Math.ceil(totalElements / (double) n);
+
+        for (int i = 0; i < totalElements; i += chunkSize) {
+            int end = Math.min(totalElements, i + chunkSize);
             String[] chunk = new String[end - i];
             System.arraycopy(bigData, i, chunk, 0, chunk.length);
-            resultArrays.add(chunk);
+            dividedArrays.add(chunk);
         }
 
-        return resultArrays;
+        return dividedArrays;
     }
 }

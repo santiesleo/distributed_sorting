@@ -7,8 +7,8 @@
  * in the user manual at https://docs.gradle.org/6.6/userguide/multi_project_builds.html
  */
 
-rootProject.name = 'helloworld'
-include ':worker'
+rootProject.name = 'distributed_sorting'
+include 'worker'
 project(':worker').projectDir = new File("worker")
-include ':master'
+include 'master'
 project(':master').projectDir = new File("master")

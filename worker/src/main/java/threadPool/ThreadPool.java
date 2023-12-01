@@ -1,6 +1,6 @@
-package threadPool;
-import client.*;
-import sort.SortTask;
+package main.java.threadPool;
+import main.java.Worker;
+import main.java.sort.SortTask;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,6 +50,6 @@ public class ThreadPool {
         executor.shutdown();
         this.sortedArray = SortTask.mergeSortedArrays(sortedSubArrs);
         // notifique al main (cliente) que ya acabó
-        Client.notifyClient();
+        Worker.notifyClient();
     }
 }

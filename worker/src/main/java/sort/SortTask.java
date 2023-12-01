@@ -1,11 +1,11 @@
-package sort;
+package main.java.sort;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.concurrent.Callable;
 
-import element.Element;
+import main.java.element.Element;
 
 public class SortTask implements Callable<String[]> {
         private String[] arr;

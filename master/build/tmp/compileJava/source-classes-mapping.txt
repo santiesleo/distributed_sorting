@@ -1,5 +1,7 @@
 TextSorter/_SlavePrxI.java
  TextSorter._SlavePrxI
+Master.java
+ main.java.Master
 TextSorter/Master.java
  TextSorter.Master
  TextSorter.Master$1

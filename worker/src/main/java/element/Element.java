@@ -1,4 +1,4 @@
-package element;
+package main.java.element;
 
 public class Element implements Comparable<Element> {
         int array, index;

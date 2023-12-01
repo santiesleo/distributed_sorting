@@ -1,4 +1,3 @@
-package main.java;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -8,8 +7,8 @@ import java.io.InputStreamReader;
 import java.net.Inet4Address;
 import java.util.*;
 import java.util.concurrent.*;
-import main.java.threadPool.*;
 import com.zeroc.Ice.*;
+import main.java.threadPool.ThreadPool;
 
 
 public class Worker {
@@ -64,7 +63,7 @@ public class Worker {
 
                     String latency_response = "\nLatency (response | less the 1000ms of testing throughput): " + (System.currentTimeMillis() - start - 1000) + "ms";
                     String requests = "\nSent requests (by this client): " + sent_request;
-                    System.out.println(latency_response + requests + "\n");
+                    // System.out.println(latency_response + requests + "\n");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

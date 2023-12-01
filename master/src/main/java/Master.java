@@ -25,7 +25,7 @@ public class Master implements MasterInterface {
             Communicator communicator = Util.initialize(args);
 
             // Crear el adaptador y agregar el objeto maestro
-            ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("MasterAdapter", "default -h localhost -p 10000");
+            ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Master", "default -h localhost -p 10000");
             Master master = new Master(16);
             adapter.add(master, new Identity("master", "master"));
             adapter.activate();

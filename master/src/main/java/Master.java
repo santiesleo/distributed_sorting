@@ -1,6 +1,10 @@
 import java.util.concurrent.*;
 
+import javax.naming.CommunicationException;
+
 import com.zeroc.Ice.*;
+import com.zeroc.Ice.Exception;
+
 import TextSorter.MasterInterface;
 import TextSorter.WorkerInterface;
 import TextSorter.WorkerInterfacePrx;

@@ -20,7 +20,7 @@ public class SortTask implements Callable<String[]> {
             return arr;
         }
 
-        public static String[] mergeSortedArrays(List<String[]> sortedSubArrs) {
+    public static String[] mergeSortedArrays(List<String[]> sortedSubArrs) {
         PriorityQueue<Element> pq = new PriorityQueue<>();
         int totalSize = 0;
         for (int i = 0; i < sortedSubArrs.size(); i++) {

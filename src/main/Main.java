@@ -1,3 +1,4 @@
+/*
 package main;
 import dataStructures.MergeSort.MergeSort;
 
@@ -68,4 +69,4 @@ public class Main {
             e.printStackTrace();
         }
     }
-}
+}*/

@@ -1,3 +1,4 @@
+package client;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -5,49 +6,39 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
+import threadPool.ThreadPool;
 
-import sort.SortTask;
-
-public class Main {
-    private static final int THREAD_POOL_SIZE = 16;
+public class Client {
+    private static String fileName;
+    private static ThreadPool threadPool;
+    private static Long startTime;
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Ingrese el nombre del archivo de datos: ");
-        String fileName = scanner.nextLine();
+        fileName = scanner.nextLine();
         String[] arr = readDataFromFile("doc/" + fileName);
 
-        Long startTime = System.currentTimeMillis();
-        ExecutorService executor = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
-        List<Future<String[]>> futures = new ArrayList<>();
-        int size = (int) Math.ceil((double) arr.length / THREAD_POOL_SIZE);
-        for (int i = 0; i < THREAD_POOL_SIZE; i++) {
-            int start = i * size;
-            int end = Math.min(start + size, arr.length);
-            
-            if (start > end) {
-                break;
-            }
+        startTime = System.currentTimeMillis();
+        ThreadPool threadPool = new ThreadPool(arr);
+        threadPool.execute();
+    }
 
-            String[] subArr = Arrays.copyOfRange(arr, start, end);
-            futures.add(executor.submit(new SortTask(subArr)));
-        }
-
-        List<String[]> sortedSubArrs = new ArrayList<>();
+    // observer
+    public static void notifyClient() {
+        // Escribir el resultado ordenado en un nuevo archivo de texto
+        // obtiene el array ordenado
         
-        for (Future<String[]> future : futures) {
-            sortedSubArrs.add(future.get());
-        }
-
-        executor.shutdown();
-        String[] sortedArr = SortTask.mergeSortedArrays(sortedSubArrs);
+        System.out.println("sorted igual a " + threadPool.getSorted());
+        String[] sortedArr = threadPool.getSorted();
         String outputFilePath = "doc/sorted_" + fileName;
         writeDataToFile(outputFilePath, sortedArr);
 
-        Long finalTime = System.currentTimeMillis();
-        System.out.println(finalTime - startTime);
-    }
+       long endTime = System.currentTimeMillis();
+       long latency = endTime - startTime;
 
+       System.out.println("Latencia de dist_sorter: " + latency + " milisegundos");
+   }
 
     private static String[] readDataFromFile(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {

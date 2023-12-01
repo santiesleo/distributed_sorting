@@ -1,3 +1,4 @@
+/*
 package dataStructures.MergeSort;
 
 import java.util.Arrays;
@@ -69,4 +70,4 @@ public class MergeSort<T extends Comparable<T>> {
             k++;
         }
     }
-}
+}*/

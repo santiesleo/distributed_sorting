@@ -86,22 +86,22 @@ public interface WorkerInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default String[] sort(String[] lines)
+    default void sort(String[] lines)
     {
-        return sort(lines, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        sort(lines, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default String[] sort(String[] lines, java.util.Map<String, String> context)
+    default void sort(String[] lines, java.util.Map<String, String> context)
     {
-        return _iceI_sortAsync(lines, context, true).waitForResponse();
+        _iceI_sortAsync(lines, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<String[]> sortAsync(String[] lines)
+    default java.util.concurrent.CompletableFuture<Void> sortAsync(String[] lines)
     {
         return _iceI_sortAsync(lines, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<String[]> sortAsync(String[] lines, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> sortAsync(String[] lines, java.util.Map<String, String> context)
     {
         return _iceI_sortAsync(lines, context, false);
     }
@@ -113,16 +113,12 @@ public interface WorkerInterfacePrx extends com.zeroc.Ice.ObjectPrx
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<String[]> _iceI_sortAsync(String[] iceP_lines, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_sortAsync(String[] iceP_lines, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<String[]> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "sort", null, sync, null);
-        f.invoke(true, context, null, ostr -> {
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "sort", null, sync, null);
+        f.invoke(false, context, null, ostr -> {
                      ostr.writeStringSeq(iceP_lines);
-                 }, istr -> {
-                     String[] ret;
-                     ret = istr.readStringSeq();
-                     return ret;
-                 });
+                 }, null);
         return f;
     }
 

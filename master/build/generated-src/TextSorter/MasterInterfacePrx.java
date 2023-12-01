@@ -53,22 +53,22 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default void addPartialResult(java.util.List<java.lang.String> res)
+    default void addPartialResult(String[] res)
     {
         addPartialResult(res, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void addPartialResult(java.util.List<java.lang.String> res, java.util.Map<String, String> context)
+    default void addPartialResult(String[] res, java.util.Map<String, String> context)
     {
         _iceI_addPartialResultAsync(res, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> addPartialResultAsync(java.util.List<java.lang.String> res)
+    default java.util.concurrent.CompletableFuture<Void> addPartialResultAsync(String[] res)
     {
         return _iceI_addPartialResultAsync(res, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> addPartialResultAsync(java.util.List<java.lang.String> res, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> addPartialResultAsync(String[] res, java.util.Map<String, String> context)
     {
         return _iceI_addPartialResultAsync(res, context, false);
     }
@@ -80,22 +80,11 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_addPartialResultAsync(java.util.List<java.lang.String> iceP_res, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_addPartialResultAsync(String[] iceP_res, java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "addPartialResult", null, sync, null);
         f.invoke(false, context, null, ostr -> {
-                     if(iceP_res == null)
-                     {
-                         ostr.writeSize(0);
-                     }
-                     else
-                     {
-                         ostr.writeSize(iceP_res.size());
-                         for(String elem : iceP_res)
-                         {
-                             ostr.writeString(elem);
-                         }
-                     }
+                     ostr.writeStringSeq(iceP_res);
                  }, null);
         return f;
     }
@@ -173,39 +162,36 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default String[] sort(String[][] partitions)
+    default String[] sort()
     {
-        return sort(partitions, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        return sort(com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default String[] sort(String[][] partitions, java.util.Map<String, String> context)
+    default String[] sort(java.util.Map<String, String> context)
     {
-        return _iceI_sortAsync(partitions, context, true).waitForResponse();
+        return _iceI_sortAsync(context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<String[]> sortAsync(String[][] partitions)
+    default java.util.concurrent.CompletableFuture<String[]> sortAsync()
     {
-        return _iceI_sortAsync(partitions, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_sortAsync(com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<String[]> sortAsync(String[][] partitions, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<String[]> sortAsync(java.util.Map<String, String> context)
     {
-        return _iceI_sortAsync(partitions, context, false);
+        return _iceI_sortAsync(context, false);
     }
 
     /**
      * @hidden
-     * @param iceP_partitions -
      * @param context -
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<String[]> _iceI_sortAsync(String[][] iceP_partitions, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<String[]> _iceI_sortAsync(java.util.Map<String, String> context, boolean sync)
     {
         com.zeroc.IceInternal.OutgoingAsync<String[]> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "sort", null, sync, null);
-        f.invoke(true, context, null, ostr -> {
-                     StringSeqSeqHelper.write(ostr, iceP_partitions);
-                 }, istr -> {
+        f.invoke(true, context, null, null, istr -> {
                      String[] ret;
                      ret = istr.readStringSeq();
                      return ret;

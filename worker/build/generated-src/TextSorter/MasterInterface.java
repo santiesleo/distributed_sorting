@@ -19,13 +19,13 @@ public interface MasterInterface extends com.zeroc.Ice.Object
 {
     void attachWorker(WorkerInterfacePrx subscriber, com.zeroc.Ice.Current current);
 
-    void addPartialResult(java.util.List<java.lang.String> res, com.zeroc.Ice.Current current);
+    void addPartialResult(String[] res, com.zeroc.Ice.Current current);
 
     void detachWorker(WorkerInterfacePrx subscriber, com.zeroc.Ice.Current current);
 
     String getTask(com.zeroc.Ice.Current current);
 
-    String[] sort(String[][] partitions, com.zeroc.Ice.Current current);
+    String[] sort(com.zeroc.Ice.Current current);
 
     /** @hidden */
     static final String[] _iceIds =
@@ -80,15 +80,8 @@ public interface MasterInterface extends com.zeroc.Ice.Object
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
-        java.util.List<java.lang.String> iceP_res;
-        iceP_res = new java.util.ArrayList<String>();
-        final int len0 = istr.readAndCheckSeqSize(1);
-        for(int i0 = 0; i0 < len0; i0++)
-        {
-            String elem;
-            elem = istr.readString();
-            iceP_res.add(elem);
-        }
+        String[] iceP_res;
+        iceP_res = istr.readStringSeq();
         inS.endReadParams();
         obj.addPartialResult(iceP_res, current);
         return inS.setResult(inS.writeEmptyParams());
@@ -140,11 +133,8 @@ public interface MasterInterface extends com.zeroc.Ice.Object
     static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_sort(MasterInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
-        com.zeroc.Ice.InputStream istr = inS.startReadParams();
-        String[][] iceP_partitions;
-        iceP_partitions = StringSeqSeqHelper.read(istr);
-        inS.endReadParams();
-        String[] ret = obj.sort(iceP_partitions, current);
+        inS.readEmptyParams();
+        String[] ret = obj.sort(current);
         com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
         ostr.writeStringSeq(ret);
         inS.endWriteParams(ostr);

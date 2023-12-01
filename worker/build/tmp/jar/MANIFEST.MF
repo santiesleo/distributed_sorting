@@ -1,11 +1,5 @@
 Manifest-Version: 1.0
 Main-Class: Worker
-Class-Path: file:/C:/Users/Dylan/.gradle/caches/modules-2/files-2.1/com.
- zeroc/icegrid/3.7.6/d9a77e04e3dd7763805862ed693e012d6395054/icegrid-3.7
- .6.jar file:/C:/Users/Dylan/.gradle/caches/modules-2/files-2.1/com.zero
- c/icestorm/3.7.6/da8f6f3622b1cb151d8440dc2272e409a90a7771/icestorm-3.7.
- 6.jar file:/C:/Users/Dylan/.gradle/caches/modules-2/files-2.1/com.zeroc
- /glacier2/3.7.6/69721b97ac6eda0e93ab9de9390790ec6fdd3cc2/glacier2-3.7.6
- .jar file:/C:/Users/Dylan/.gradle/caches/modules-2/files-2.1/com.zeroc/
- ice/3.7.6/6c7f86b7f9e5f0804a7307077e6c058d8a93fa70/ice-3.7.6.jar
+Class-Path: file:/C:/Users/ferna/.gradle/caches/modules-2/files-2.1/com.
+ zeroc/ice/3.7.6/6c7f86b7f9e5f0804a7307077e6c058d8a93fa70/ice-3.7.6.jar
 

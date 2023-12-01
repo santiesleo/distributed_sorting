@@ -21,7 +21,7 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
 
     void subscribe(com.zeroc.Ice.Current current);
 
-    String[] sort(String[] lines, com.zeroc.Ice.Current current);
+    void sort(String[] lines, com.zeroc.Ice.Current current);
 
     /** @hidden */
     static final String[] _iceIds =
@@ -94,11 +94,8 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
         String[] iceP_lines;
         iceP_lines = istr.readStringSeq();
         inS.endReadParams();
-        String[] ret = obj.sort(iceP_lines, current);
-        com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
-        ostr.writeStringSeq(ret);
-        inS.endWriteParams(ostr);
-        return inS.setResult(ostr);
+        obj.sort(iceP_lines, current);
+        return inS.setResult(inS.writeEmptyParams());
     }
 
     /** @hidden */

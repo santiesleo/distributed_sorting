@@ -1,6 +1,7 @@
-package main.java.threadPool;
-import main.java.Worker;
-import main.java.sort.SortTask;
+package threadPool;
+
+import worker.Worker;
+import sort.SortTask;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;

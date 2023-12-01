@@ -1,74 +1,143 @@
-import java.util.List;
+import java.util.concurrent.*;
 
 import com.zeroc.Ice.*;
 import TextSorter.MasterInterface;
+import TextSorter.WorkerInterface;
 import TextSorter.WorkerInterfacePrx;
-import java.util.ArrayList;
-import java.util.Arrays;
-import com.zeroc.Ice.Exception;
+
+import mergeSortedArrays.*;
+import java.io.*;
+import java.util.*;
 
 public class Master implements MasterInterface {
-
     private final int numThreads;  // Número de hilos a utilizar
     private final List<Thread> threads;  // Lista para almacenar los hilos
     private final List<WorkerInterfacePrx> workers;  // Lista para almacenar las referencias a los esclavos
+    private static int nodes;
+    private ArrayList<String[]> sortedArrays;
+    private int counter = 0;
+    private static int counterForSub = 0;
+    private static int size;
+    private static ArrayList<String[]> subArrays;
+    private static TextSorter.WorkerInterfacePrx workerInterfacePrx;
 
     public Master(int numThreads) {
         this.numThreads = numThreads;
         this.threads = new ArrayList<>();
         this.workers = new ArrayList<>();
+        this.subArrays = new ArrayList<>();
     }
 
     public static void main(String[] args)  {
-        try {
-            // Inicializar el Communicator
-            Communicator communicator = Util.initialize(args);
+        Scanner reader = new Scanner(System.in);
+
+        try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "master.cfg")){            
+            com.zeroc.Ice.ObjectPrx prx = communicator.stringToProxy("Master:default -p 10000");
+
+            // communicator con propiedades de callback
+            communicator.getProperties().setProperty("Ice.Default.Package",
+                    "com.zeroc.demos.Ice.master");
 
             // Crear el adaptador y agregar el objeto maestro
             ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Master", "default -h localhost -p 10000");
             Master master = new Master(16);
-            adapter.add(master, new Identity("master", "master"));
+            adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("master"));
+            adapter.createProxy(prx.ice_getIdentity());
             adapter.activate();
+
+            // twoway añadido, debe esperar respuesta
+            workerInterfacePrx = TextSorter.WorkerInterfacePrx
+                    .checkedCast(communicator.propertyToProxy("Worker.Proxy")).ice_twoway();
 
             // Imprimir mensaje indicando que el servidor está listo
             System.out.println("Servidor maestro listo para recibir conexiones...");
+            
+            System.out.println("Selecciona la cantidad de nodos que deseas utilizar para ordenar: " +
+                "\na -> 1 nodo"+ 
+                "\nb -> 4 nodos" +
+                "\nc -> 8 nodos" +
+                "\nd -> 12 nodos");
+            String opt = reader.next();
 
-            // Esperar a que se cierre el servidor
-            communicator.waitForShutdown();
+            switch (opt) {
+                case "a":
+                    nodes = 1;
+                    break;
+                
+                case "b":
+                    nodes = 4;
+                    break;
 
-            // Apagar el Communicator cuando se cierre el servidor
-            communicator.destroy();
+                case "c":
+                    nodes = 8;
+                    break;
+                
+                case "d":
+                    nodes = 12;
+                    break;
+
+                default:
+                    System.out.println("Bad option");
+                    nodes = 0;
+                    break;
+            }
+
+
+            if (nodes != 0){
+                Scanner scanner = new Scanner(System.in);
+                System.out.print("Ingrese el nombre del archivo de datos: ");
+                String fileName = scanner.nextLine();
+                String[] arr = readDataFromFile("doc/" + fileName);
+
+                // metodo que llama a los demas para crear las tareas, ejecutar workers y ordenar
+                doProcess(arr);
+
+                // Esperar a que se cierre el servidor
+                communicator.waitForShutdown();
+
+                // Apagar el Communicator cuando se cierre el servidor
+                communicator.destroy();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    
     }
 
-     @Override
-    public String[] sort(String[][] partitions, Current current) {
-        int partitionSize = partitions.length / numThreads;
+    public static void doProcess(String[] arrayToSort){
+        createTasks(arrayToSort);
+        launchWorkers();
+    }
 
-        // Crear hilos y asignarles tareas
-        for (int i = 0; i < numThreads; i++) {
-            int start = i * partitionSize;
-            int end = (i == numThreads - 1) ? partitions.length : (i + 1) * partitionSize;
-
-            String[][] task = Arrays.copyOfRange(partitions, start, end);
-            Thread thread = new Thread(() -> {
-                // Lógica del esclavo para procesar la tarea
-                processTask(task);
-            });
-
-            threads.add(thread);
-            thread.start();
-        }
-
-        // Esperar a que todos los hilos terminen
-        joinThreads();
-
-        // Combinar resultados de los esclavos si es necesario
-        // ...
-
+    @Override
+    public String[] sort(Current current) {
+        
         return null;  // Reemplazar con el resultado real
+    }
+ 
+    // creamos los subarrays para los workers
+    public static void createTasks(String[] bigArray) {
+        size = (int) Math.ceil((double) bigArray.length / nodes);
+
+        for (int i = 0; i < nodes; i++) {
+            int start = i * size;
+            int end = Math.min(start + size, bigArray.length);
+            
+            if (start > end) {
+                break;
+            }
+
+            String[] subArr = Arrays.copyOfRange(bigArray, start, end);
+            // añado subarrays para luego mandarselos a los workers
+            subArrays.add(subArr);
+        }
+    }  
+
+    // enviamos a cada worker su respectivo subarray para que lo ordene
+    public static void launchWorkers() {
+        for (String[] stringArr : subArrays) {
+            Master.workerInterfacePrx.sort(stringArr);   
+        }
     }
 
     @Override
@@ -78,9 +147,19 @@ public class Master implements MasterInterface {
     }
 
     @Override
-    public void addPartialResult(List<String> res, Current current) {
-        // Lógica para combinar resultados parciales si es necesario
-        // ...
+    public void addPartialResult(String[] res, Current current) {
+        MergeSortedArrays merge = new MergeSortedArrays();
+        
+        counter++;
+
+        // añadimos la respuesta de los workers a sortedArrays
+        sortedArrays.add(res);
+
+        merge.mergeSortedArrays(sortedArrays);
+
+        if (counter == nodes){
+            sort(current);
+        }
     }
 
     @Override
@@ -91,27 +170,33 @@ public class Master implements MasterInterface {
 
     @Override
     public String getTask(Current current) {
-        // Lógica para proporcionar una tarea a los esclavos
-        // ...
-
         return null;  // Reemplazar con la tarea real
     }
 
-    private void processTask(String[][] task) {
-        // Lógica del esclavo para procesar la tarea
-        // ...
+    private static String[] readDataFromFile(String fileName) {
+        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            StringBuilder content = new StringBuilder();
 
-        System.out.println("Esclavo procesando tarea: " + Arrays.deepToString(task));
+            while ((line = br.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+
+            return content.toString().trim().split("\\s+");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new String[0];
+        }
     }
 
-    private void joinThreads() {
-        // Esperar a que todos los hilos terminen
-        for (Thread thread : threads) {
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+    private static void writeDataToFile(String filePath, String[] data) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+            // Write each element of the sorted data on a new line
+            for (String element : data) {
+                writer.write(element + "\n");
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

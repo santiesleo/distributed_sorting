@@ -1,18 +1,23 @@
-TextSorter/MasterInterfacePrx.java
- TextSorter.MasterInterfacePrx
+TextSorter/WorkerInterfacePrx.java
+ TextSorter.WorkerInterfacePrx
 TextSorter/WorkerInterface.java
  TextSorter.WorkerInterface
  TextSorter.WorkerInterface$1
 TextSorter/_WorkerInterfacePrxI.java
  TextSorter._WorkerInterfacePrxI
-TextSorter/WorkerInterfacePrx.java
- TextSorter.WorkerInterfacePrx
+TextSorter/StringSeqSeqHelper.java
+ TextSorter.StringSeqSeqHelper
+TextSorter/MasterInterfacePrx.java
+ TextSorter.MasterInterfacePrx
+TextSorter/_MasterInterfacePrxI.java
+ TextSorter._MasterInterfacePrxI
 TextSorter/MasterInterface.java
  TextSorter.MasterInterface
  TextSorter.MasterInterface$1
-TextSorter/_MasterInterfacePrxI.java
- TextSorter._MasterInterfacePrxI
-TextSorter/StringSeqSeqHelper.java
- TextSorter.StringSeqSeqHelper
+mergeSortedArrays/MergeSortedArrays.java
+ mergeSortedArrays.MergeSortedArrays
+ mergeSortedArrays.MergeSortedArrays$1
 Master.java
  Master
+elem/Elem.java
+ elem.Elem

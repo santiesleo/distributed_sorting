@@ -20,7 +20,7 @@ public class Client {
         String[] arr = readDataFromFile("doc/" + fileName);
 
         startTime = System.currentTimeMillis();
-        ThreadPool threadPool = new ThreadPool(arr);
+        Client.threadPool = new ThreadPool(arr);
         threadPool.execute();
     }
 
@@ -28,8 +28,6 @@ public class Client {
     public static void notifyClient() {
         // Escribir el resultado ordenado en un nuevo archivo de texto
         // obtiene el array ordenado
-        
-        System.out.println("sorted igual a " + threadPool.getSorted());
         String[] sortedArr = threadPool.getSorted();
         String outputFilePath = "doc/sorted_" + fileName;
         writeDataToFile(outputFilePath, sortedArr);

@@ -1,0 +1,18 @@
+TextSorter/MasterInterfacePrx.java
+ TextSorter.MasterInterfacePrx
+TextSorter/WorkerInterface.java
+ TextSorter.WorkerInterface
+ TextSorter.WorkerInterface$1
+TextSorter/_WorkerInterfacePrxI.java
+ TextSorter._WorkerInterfacePrxI
+Master.java
+ Master
+TextSorter/MasterInterface.java
+ TextSorter.MasterInterface
+ TextSorter.MasterInterface$1
+TextSorter/_MasterInterfacePrxI.java
+ TextSorter._MasterInterfacePrxI
+TextSorter/StringSeqSeqHelper.java
+ TextSorter.StringSeqSeqHelper
+TextSorter/WorkerInterfacePrx.java
+ TextSorter.WorkerInterfacePrx

@@ -1,14 +1,11 @@
 package master;
 
-
 import java.util.concurrent.*;
 
 import com.zeroc.Ice.*;
 import com.zeroc.Ice.Exception;
-
 import TextSorter.MasterInterface;
 import TextSorter.WorkerInterfacePrx;
-
 import threadPool.ThreadPool;
 
 import java.io.*;
@@ -19,15 +16,13 @@ public class Master implements MasterInterface {
     private final List<Thread> threads;  // Lista para almacenar los hilos
     private static List<WorkerInterfacePrx> workers;  // Lista para almacenar las referencias a los esclavos
     private static int nodes;
-    // private ArrayList<String[]> sortedArrays;
     private int counter = 0;
-    // private static int counterForSub = 0;
-    // private static int size;
     private static ArrayList<String[]> subArrays;
-    private static TextSorter.WorkerInterfacePrx workerInterfacePrx;
     private static List<String> sorted;
     private static ThreadPool threadPool;
     private static String fileName;
+    private static Scanner reader;
+    private static String[] arr;
 
     public Master(int numThreads) {
         this.numThreads = numThreads;
@@ -37,100 +32,91 @@ public class Master implements MasterInterface {
         this.sorted = new ArrayList<>();
     }
 
-    public static void main(String[] args)  {
-        Scanner reader = new Scanner(System.in);
+    public static void main(String[] args) {
+        reader = new Scanner(System.in);
 
-        try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "master.cfg")){
-            // communicator con propiedades de callback
-            communicator.getProperties().setProperty("Ice.Default.Package",
-                    "TextSorter");
+        menu();
 
-            // Crear el adaptador y agregar el objeto maestro - Los nombres son arbitrarios
-            // los colocamos por convención
-            ObjectAdapter adapter = communicator.createObjectAdapter("Master");
-            Master master = new Master(16);
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Ingrese el nombre del archivo de datos: ");
+        fileName = scanner.nextLine();
+        arr = readDataFromFile("doc/" + fileName);
 
-            adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("Master"));
-            adapter.activate();
+        // si nodos = 0 no sortea nada, mal input
+        if (nodes != 0) {
 
-            /*
-            String workerProxyProperty = communicator.getProperties().getProperty("WorkerInterface.Proxy");
-            System.out.println("Worker Proxy Property: " + workerProxyProperty);
-            ObjectPrx base = communicator.stringToProxy(workerProxyProperty);
-            System.out.println(base.toString());
+            // si nodos = 1 lo sorteo aqui mismo, monolítico
+            if (nodes == 1) {
+                threadPool = new ThreadPool(arr);
 
-            workerInterfacePrx = TextSorter.WorkerInterfacePrx.checkedCast(base).ice_twoway();
-            */
+                try {
+                    threadPool.execute();
+                } catch (InterruptedException | ExecutionException interruptedException) {
+                    System.out.println(interruptedException.getMessage());
+                }
+            } else {
+                // inicializamos ICE para conectarnos con los workers distribuidos
+                try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "master.cfg")) {
+                    // communicator con propiedades de callback
+                    communicator.getProperties().setProperty("Ice.Default.Package",
+                            "TextSorter");
 
-            // two way añadido, debe esperar respuesta
-            // workerInterfacePrx = TextSorter.WorkerInterfacePrx.checkedCast(communicator.propertyToProxy("WorkerInterface.Proxy")).ice_twoway();
+                    // Crear el adaptador y agregar el objeto maestro - Los nombres son arbitrarios
+                    // los colocamos por convención
+                    ObjectAdapter adapter = communicator.createObjectAdapter("Master");
+                    Master master = new Master(16);
 
-            // Imprimir mensaje indicando que el servidor está listo
-            System.out.println("Servidor 'Master' listo para recibir conexiones...");
+                    adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("Master"));
+                    adapter.activate();
 
-            System.out.println("Selecciona la cantidad de nodos que deseas utilizar para ordenar: " +
-                "\na -> 1 nodo"+
+                    // Imprimir mensaje indicando que el servidor está listo
+                    System.out.println("Servidor 'Master' listo para recibir conexiones...");
+
+                    // Esperar a que se cierre el servidor
+                    communicator.waitForShutdown();
+
+                    // Apagar el Communicator cuando se cierre el servidor
+                    communicator.destroy();
+                } catch (com.zeroc.Ice.ObjectNotExistException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public static void menu() {
+        System.out.println("Selecciona la cantidad de nodos que deseas utilizar para ordenar: " +
+                "\na -> 1 nodo" +
                 "\nb -> 4 nodos" +
                 "\nc -> 8 nodos" +
                 "\nd -> 12 nodos");
-            String opt = reader.next();
+        String opt = reader.next();
 
-            switch (opt) {
-                case "a":
-                    nodes = 1;
-                    break;
+        switch (opt) {
+            case "a":
+                nodes = 1;
+                break;
 
-                case "b":
-                    nodes = 4;
-                    break;
+            case "b":
+                nodes = 4;
+                break;
 
-                case "c":
-                    nodes = 8;
-                    break;
+            case "c":
+                nodes = 8;
+                break;
 
-                case "d":
-                    nodes = 12;
-                    break;
+            case "d":
+                nodes = 12;
+                break;
 
-                default:
-                    System.out.println("Bad option");
-                    nodes = 0;
-                    break;
-            }
-
-
-            if (nodes != 0){
-                Scanner scanner = new Scanner(System.in);
-                System.out.print("Ingrese el nombre del archivo de datos: ");
-                fileName = scanner.nextLine();
-                String[] arr = readDataFromFile("doc/" + fileName);
-
-                if (nodes == 1){
-                    threadPool = new ThreadPool(arr);
-
-                    try {
-                        threadPool.execute();
-                    } catch (InterruptedException | ExecutionException interruptedException) {
-                        System.out.println(interruptedException.getMessage());
-                    }
-                } else {
-                    // metodo que llama a los demas para crear las tareas, ejecutar workers y ordenar
-                    doProcess(arr);
-                }
-
-                // Esperar a que se cierre el servidor
-                communicator.waitForShutdown();
-
-                // Apagar el Communicator cuando se cierre el servidor
-                communicator.destroy();
-            }
-        } catch (com.zeroc.Ice.ObjectNotExistException ex) {
-            ex.printStackTrace();
+            default:
+                System.out.println("Bad option");
+                nodes = 0;
+                break;
         }
-
     }
 
-    public static void doProcess(String[] arrayToSort){
+    public static void doProcess(String[] arrayToSort) {
         createTasks(arrayToSort);
         launchWorkers();
     }
@@ -148,7 +134,7 @@ public class Master implements MasterInterface {
         }
     }
 
-    public static void notifySorted(){
+    public static void notifySorted() {
         writeDataToFile(fileName, threadPool.getSorted());
     }
 
@@ -182,6 +168,10 @@ public class Master implements MasterInterface {
     public void attachWorker(WorkerInterfacePrx subscriber, Current current) {
         workers.add(subscriber);
         System.out.println("\nWorker suscrito: " + subscriber.toString());
+
+        if (workers.size() == nodes) {
+            doProcess(arr);
+        }
     }
 
     @Override
@@ -193,7 +183,7 @@ public class Master implements MasterInterface {
         //sortedArrays.add(res);
         sorted.addAll(Arrays.asList(res));
 
-        if (counter == nodes){
+        if (counter == nodes) {
             sort(current);
         }
     }

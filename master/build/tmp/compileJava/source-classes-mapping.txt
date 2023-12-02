@@ -14,25 +14,11 @@ TextSorter/_MasterInterfacePrxI.java
  TextSorter._MasterInterfacePrxI
 TextSorter/StringSeqSeqHelper.java
  TextSorter.StringSeqSeqHelper
-TextSorter/WorkerInterfacePrx.java
- TextSorter.WorkerInterfacePrx
-element/Element.java
- element.Element
-TextSorter/SlavePrx.java
- TextSorter.SlavePrx
-TextSorter/MasterPrx.java
- TextSorter.MasterPrx
-TextSorter/_SlavePrxI.java
- TextSorter._SlavePrxI
-TextSorter/Master.java
- TextSorter.Master
- TextSorter.Master$1
-TextSorter/Slave.java
- TextSorter.Slave
- TextSorter.Slave$1
-TextSorter/_MasterPrxI.java
- TextSorter._MasterPrxI
 threadPool/ThreadPool.java
  threadPool.ThreadPool
 master/Master.java
  master.Master
+element/Element.java
+ element.Element
+TextSorter/WorkerInterfacePrx.java
+ TextSorter.WorkerInterfacePrx

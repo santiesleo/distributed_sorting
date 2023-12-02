@@ -50,7 +50,11 @@ public class Master implements MasterInterface {
                 threadPool = new ThreadPool(arr);
 
                 try {
+                    //Medición
+                    long start = System.currentTimeMillis();
                     threadPool.execute();
+                    System.out.println("Sort monolitico: " + (System.currentTimeMillis() - start));
+
                 } catch (InterruptedException | ExecutionException interruptedException) {
                     System.out.println(interruptedException.getMessage());
                 }
@@ -135,7 +139,8 @@ public class Master implements MasterInterface {
     }
 
     public static void notifySorted() {
-        writeDataToFile(fileName, threadPool.getSorted());
+        String outputFilePath = "doc/sorted_" + fileName;
+        writeDataToFile(outputFilePath, threadPool.getSorted());
     }
 
     // creamos los subarrays para los workers

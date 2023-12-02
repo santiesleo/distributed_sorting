@@ -1,14 +1,14 @@
 <state>
-  <timestamp value='1701416543465' />
+  <timestamp value='1701539766758' />
   <sourceSet name='default'>
     <source name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\TextSorter.ice'>
-      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\Slave.java' />
-      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\Master.java' />
+      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\WorkerInterface.java' />
+      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\MasterInterface.java' />
       <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\StringSeqSeqHelper.java' />
-      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\SlavePrx.java' />
-      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\_SlavePrxI.java' />
-      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\MasterPrx.java' />
-      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\_MasterPrxI.java' />
+      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\WorkerInterfacePrx.java' />
+      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\_WorkerInterfacePrxI.java' />
+      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\MasterInterfacePrx.java' />
+      <file name='C:\Users\Dylan\Desktop\DM11\Programacion\1A_ICE_Projects\distributed_sorting\master\build\generated-src\TextSorter\_MasterInterfacePrxI.java' />
     </source>
     <arg value='C:\Program Files\ZeroC\Ice-3.7.9\\bin\slice2java.exe' />
     <arg value='-IC:\Program Files\ZeroC\Ice-3.7.9\\slice' />

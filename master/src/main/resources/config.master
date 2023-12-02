@@ -8,3 +8,4 @@ Master.Endpoints=tcp -p 10000
 # Only listen on the ZeroTier's LIASOn1 interface by default.
 #
 Ice.Default.Host=10.147.19.138
+WorkerInterface.Proxy = WorkerInterface: tcp -p 10000

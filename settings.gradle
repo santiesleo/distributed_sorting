@@ -12,3 +12,4 @@ include 'worker'
 project(':worker').projectDir = new File("worker")
 include 'master'
 project(':master').projectDir = new File("master")
+include('doc')

@@ -16,7 +16,7 @@ import java.util.*;
 public class Master implements MasterInterface {
     private final int numThreads;  // Número de hilos a utilizar
     private final List<Thread> threads;  // Lista para almacenar los hilos
-    private final List<WorkerInterfacePrx> workers;  // Lista para almacenar las referencias a los esclavos
+    private static List<WorkerInterfacePrx> workers;  // Lista para almacenar las referencias a los esclavos
     private static int nodes;
     // private ArrayList<String[]> sortedArrays;
     private int counter = 0;
@@ -53,8 +53,11 @@ public class Master implements MasterInterface {
             // adapter.createProxy(prx.ice_getIdentity());
             adapter.activate();
 
+            System.out.println(TextSorter.WorkerInterfacePrx.class);
             // twoway añadido, debe esperar respuesta
-            workerInterfacePrx = TextSorter.WorkerInterfacePrx.checkedCast(communicator.propertyToProxy("Worker.Proxy")).ice_twoway();
+            // workerInterfacePrx = TextSorter.WorkerInterfacePrx.checkedCast(communicator.propertyToProxy("WorkerInterface.Proxy")).ice_twoway();
+            workerInterfacePrx = TextSorter.WorkerInterfacePrx
+            .uncheckedCast(communicator.propertyToProxy("WorkerInterface.Proxy")).ice_twoway();
 
             // Imprimir mensaje indicando que el servidor está listo
             System.out.println("Servidor maestro listo para recibir conexiones...");
@@ -148,7 +151,7 @@ public class Master implements MasterInterface {
     // enviamos a cada worker su respectivo subarray para que lo ordene
     public static void launchWorkers() {
         for (String[] stringArr : subArrays) {
-            Master.workerInterfacePrx.sort(stringArr);   
+            workerInterfacePrx.sort(stringArr);   
         }
     }
 

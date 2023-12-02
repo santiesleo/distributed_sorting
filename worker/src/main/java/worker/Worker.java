@@ -39,8 +39,9 @@ public class Worker implements WorkerInterface {
             adapter.createProxy(prx.ice_getIdentity());
             adapter.activate();
             
+            System.out.println("Prendio la bareta");
             // twoway añadido, debe esperar respuesta
-            Worker.masterInterfacePrx = TextSorter.MasterInterfacePrx.checkedCast(communicator.propertyToProxy("Master.Proxy")).ice_twoway();
+            masterInterfacePrx = TextSorter.MasterInterfacePrx.uncheckedCast(communicator.propertyToProxy("Master.Proxy")).ice_twoway();
 
             startTime = System.currentTimeMillis();
         } catch (com.zeroc.Ice.ObjectNotExistException ex) {     

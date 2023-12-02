@@ -18,10 +18,10 @@ TextSorter/WorkerInterfacePrx.java
  TextSorter.WorkerInterfacePrx
 element/Element.java
  element.Element
-threadPool/ThreadPool.java
- threadPool.ThreadPool
-master/Master.java
- master.Master
+TextSorter/SlavePrx.java
+ TextSorter.SlavePrx
+TextSorter/MasterPrx.java
+ TextSorter.MasterPrx
 TextSorter/_SlavePrxI.java
  TextSorter._SlavePrxI
 TextSorter/Master.java
@@ -32,7 +32,7 @@ TextSorter/Slave.java
  TextSorter.Slave$1
 TextSorter/_MasterPrxI.java
  TextSorter._MasterPrxI
-TextSorter/MasterPrx.java
- TextSorter.MasterPrx
-TextSorter/SlavePrx.java
- TextSorter.SlavePrx
+threadPool/ThreadPool.java
+ threadPool.ThreadPool
+master/Master.java
+ master.Master

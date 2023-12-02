@@ -18,10 +18,10 @@ TextSorter/StringSeqSeqHelper.java
  TextSorter.StringSeqSeqHelper
 element/Element.java
  element.Element
-worker/Worker.java
- worker.Worker
-threadPool/ThreadPool.java
- threadPool.ThreadPool
+TextSorter/SlavePrx.java
+ TextSorter.SlavePrx
+TextSorter/MasterPrx.java
+ TextSorter.MasterPrx
 TextSorter/_SlavePrxI.java
  TextSorter._SlavePrxI
 TextSorter/Master.java
@@ -32,7 +32,7 @@ TextSorter/Slave.java
  TextSorter.Slave$1
 TextSorter/_MasterPrxI.java
  TextSorter._MasterPrxI
-TextSorter/MasterPrx.java
- TextSorter.MasterPrx
-TextSorter/SlavePrx.java
- TextSorter.SlavePrx
+worker/Worker.java
+ worker.Worker
+threadPool/ThreadPool.java
+ threadPool.ThreadPool

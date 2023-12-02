@@ -67,9 +67,9 @@ public class Master implements MasterInterface {
 
             // Imprimir mensaje indicando que el servidor está listo
             System.out.println("Servidor 'Master' listo para recibir conexiones...");
-            
+
             System.out.println("Selecciona la cantidad de nodos que deseas utilizar para ordenar: " +
-                "\na -> 1 nodo"+ 
+                "\na -> 1 nodo"+
                 "\nb -> 4 nodos" +
                 "\nc -> 8 nodos" +
                 "\nd -> 12 nodos");
@@ -79,7 +79,7 @@ public class Master implements MasterInterface {
                 case "a":
                     nodes = 1;
                     break;
-                
+
                 case "b":
                     nodes = 4;
                     break;
@@ -87,7 +87,7 @@ public class Master implements MasterInterface {
                 case "c":
                     nodes = 8;
                     break;
-                
+
                 case "d":
                     nodes = 12;
                     break;
@@ -105,8 +105,18 @@ public class Master implements MasterInterface {
                 fileName = scanner.nextLine();
                 String[] arr = readDataFromFile("doc/" + fileName);
 
-                // metodo que llama a los demas para crear las tareas, ejecutar workers y ordenar
-                doProcess(arr);
+                if (nodes == 1){
+                    threadPool = new ThreadPool(arr);
+
+                    try {
+                        threadPool.execute();
+                    } catch (InterruptedException | ExecutionException interruptedException) {
+                        System.out.println(interruptedException.getMessage());
+                    }
+                } else {
+                    // metodo que llama a los demas para crear las tareas, ejecutar workers y ordenar
+                    doProcess(arr);
+                }
 
                 // Esperar a que se cierre el servidor
                 communicator.waitForShutdown();
@@ -114,10 +124,10 @@ public class Master implements MasterInterface {
                 // Apagar el Communicator cuando se cierre el servidor
                 communicator.destroy();
             }
-        } catch (com.zeroc.Ice.ObjectNotExistException ex) {     
+        } catch (com.zeroc.Ice.ObjectNotExistException ex) {
             ex.printStackTrace();
         }
-    
+
     }
 
     public static void doProcess(String[] arrayToSort){
@@ -130,12 +140,18 @@ public class Master implements MasterInterface {
         String[] array = new String[sorted.size()];
 
         threadPool = new ThreadPool(sorted.toArray(array));
+
+        try {
+            threadPool.execute();
+        } catch (InterruptedException | ExecutionException interruptedException) {
+            System.out.println(interruptedException.getMessage());
+        }
     }
 
     public static void notifySorted(){
         writeDataToFile(fileName, threadPool.getSorted());
     }
- 
+
     // creamos los subarrays para los workers
     public static void createTasks(String[] bigArray) {
         int size = (int) Math.ceil((double) bigArray.length / nodes);
@@ -143,16 +159,16 @@ public class Master implements MasterInterface {
         for (int i = 0; i < nodes; i++) {
             int start = i * size;
             int end = Math.min(start + size, bigArray.length);
-            
+
             if (start > end) {
                 break;
             }
-            
+
             String[] subArr = Arrays.copyOfRange(bigArray, start, end);
             // añado subarrays para luego mandarselos a los workers
             subArrays.add(subArr);
         }
-    }  
+    }
 
     // enviamos a cada worker su respectivo subarray para que lo ordene
     public static void launchWorkers() {
@@ -165,7 +181,7 @@ public class Master implements MasterInterface {
     @Override
     public void attachWorker(WorkerInterfacePrx subscriber, Current current) {
         workers.add(subscriber);
-        System.out.println("Esclavo adjuntado: " + subscriber.toString());
+        System.out.println("\nWorker suscrito: " + subscriber.toString());
     }
 
     @Override
@@ -185,7 +201,7 @@ public class Master implements MasterInterface {
     @Override
     public void detachWorker(WorkerInterfacePrx subscriber, Current current) {
         workers.remove(subscriber);
-        System.out.println("Esclavo desvinculado: " + subscriber.toString());
+        System.out.println("\nWorker desuscrito: " + subscriber.toString());
     }
 
     @Override

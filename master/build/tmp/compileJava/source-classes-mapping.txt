@@ -22,3 +22,17 @@ threadPool/ThreadPool.java
  threadPool.ThreadPool
 master/Master.java
  master.Master
+TextSorter/_SlavePrxI.java
+ TextSorter._SlavePrxI
+TextSorter/Master.java
+ TextSorter.Master
+ TextSorter.Master$1
+TextSorter/Slave.java
+ TextSorter.Slave
+ TextSorter.Slave$1
+TextSorter/_MasterPrxI.java
+ TextSorter._MasterPrxI
+TextSorter/MasterPrx.java
+ TextSorter.MasterPrx
+TextSorter/SlavePrx.java
+ TextSorter.SlavePrx

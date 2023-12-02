@@ -50,12 +50,11 @@ public class Master implements MasterInterface {
             ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Master", "default -h localhost -p 10000");
             Master master = new Master(16);
             adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("master"));
-            adapter.createProxy(prx.ice_getIdentity());
+            // adapter.createProxy(prx.ice_getIdentity());
             adapter.activate();
 
             // twoway añadido, debe esperar respuesta
-            workerInterfacePrx = TextSorter.WorkerInterfacePrx
-                    .checkedCast(communicator.propertyToProxy("Worker.Proxy")).ice_twoway();
+            workerInterfacePrx = TextSorter.WorkerInterfacePrx.checkedCast(communicator.propertyToProxy("Worker.Proxy")).ice_twoway();
 
             // Imprimir mensaje indicando que el servidor está listo
             System.out.println("Servidor maestro listo para recibir conexiones...");
@@ -106,8 +105,8 @@ public class Master implements MasterInterface {
                 // Apagar el Communicator cuando se cierre el servidor
                 communicator.destroy();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (com.zeroc.Ice.ObjectNotExistException ex) {     
+            ex.printStackTrace();
         }
     
     }

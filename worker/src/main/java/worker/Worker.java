@@ -25,24 +25,26 @@ public class Worker implements WorkerInterface {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "worker.cfg")) {
+            
             com.zeroc.Ice.ObjectPrx prx = communicator.stringToProxy("Worker:default -p 10000");
-
+            
             // communicator con propiedades de callback
             communicator.getProperties().setProperty("Ice.Default.Package",
-                    "com.zeroc.demos.Ice.worker");
-
+            "com.zeroc.demos.Ice.worker");
+            
             // Crear el adaptador y agregar el objeto maestro
             ObjectAdapter adapter = communicator.createObjectAdapterWithEndpoints("Worker", "default -h localhost -p 10000");
             Worker master = new Worker();
-            adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("worker"));
+            adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("Worker"));
             adapter.createProxy(prx.ice_getIdentity());
             adapter.activate();
-
+            
             // twoway añadido, debe esperar respuesta
-            Worker.masterInterfacePrx = TextSorter.MasterInterfacePrx
-                    .checkedCast(communicator.propertyToProxy("Master.Proxy")).ice_twoway();
-    
+            Worker.masterInterfacePrx = TextSorter.MasterInterfacePrx.checkedCast(communicator.propertyToProxy("Master.Proxy")).ice_twoway();
+
             startTime = System.currentTimeMillis();
+        } catch (com.zeroc.Ice.ObjectNotExistException ex) {     
+            ex.printStackTrace();
         }
     }
 

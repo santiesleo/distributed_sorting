@@ -162,22 +162,22 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default String[] sort()
+    default void sort()
     {
-        return sort(com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        sort(com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default String[] sort(java.util.Map<String, String> context)
+    default void sort(java.util.Map<String, String> context)
     {
-        return _iceI_sortAsync(context, true).waitForResponse();
+        _iceI_sortAsync(context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<String[]> sortAsync()
+    default java.util.concurrent.CompletableFuture<Void> sortAsync()
     {
         return _iceI_sortAsync(com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<String[]> sortAsync(java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> sortAsync(java.util.Map<String, String> context)
     {
         return _iceI_sortAsync(context, false);
     }
@@ -188,14 +188,10 @@ public interface MasterInterfacePrx extends com.zeroc.Ice.ObjectPrx
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<String[]> _iceI_sortAsync(java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_sortAsync(java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<String[]> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "sort", null, sync, null);
-        f.invoke(true, context, null, null, istr -> {
-                     String[] ret;
-                     ret = istr.readStringSeq();
-                     return ret;
-                 });
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "sort", null, sync, null);
+        f.invoke(false, context, null, null, null);
         return f;
     }
 

@@ -1,15 +1,15 @@
-import java.util.concurrent.*;
+package master;
 
-import javax.naming.CommunicationException;
+import java.util.concurrent.*;
 
 import com.zeroc.Ice.*;
 import com.zeroc.Ice.Exception;
 
 import TextSorter.MasterInterface;
-import TextSorter.WorkerInterface;
 import TextSorter.WorkerInterfacePrx;
 
-import mergeSortedArrays.*;
+import threadPool.ThreadPool;
+
 import java.io.*;
 import java.util.*;
 
@@ -18,18 +18,22 @@ public class Master implements MasterInterface {
     private final List<Thread> threads;  // Lista para almacenar los hilos
     private final List<WorkerInterfacePrx> workers;  // Lista para almacenar las referencias a los esclavos
     private static int nodes;
-    private ArrayList<String[]> sortedArrays;
+    // private ArrayList<String[]> sortedArrays;
     private int counter = 0;
-    private static int counterForSub = 0;
-    private static int size;
+    // private static int counterForSub = 0;
+    // private static int size;
     private static ArrayList<String[]> subArrays;
     private static TextSorter.WorkerInterfacePrx workerInterfacePrx;
+    private static List<String> sorted;
+    private static ThreadPool threadPool;
+    private static String fileName;
 
     public Master(int numThreads) {
         this.numThreads = numThreads;
         this.threads = new ArrayList<>();
         this.workers = new ArrayList<>();
         this.subArrays = new ArrayList<>();
+        this.sorted = new ArrayList<>();
     }
 
     public static void main(String[] args)  {
@@ -90,7 +94,7 @@ public class Master implements MasterInterface {
             if (nodes != 0){
                 Scanner scanner = new Scanner(System.in);
                 System.out.print("Ingrese el nombre del archivo de datos: ");
-                String fileName = scanner.nextLine();
+                fileName = scanner.nextLine();
                 String[] arr = readDataFromFile("doc/" + fileName);
 
                 // metodo que llama a los demas para crear las tareas, ejecutar workers y ordenar
@@ -114,14 +118,19 @@ public class Master implements MasterInterface {
     }
 
     @Override
-    public String[] sort(Current current) {
-        
-        return null;  // Reemplazar con el resultado real
+    public void sort(Current current) {
+        String[] array = new String[sorted.size()];
+
+        threadPool = new ThreadPool(sorted.toArray(array));
+    }
+
+    public static void notifySorted(){
+        writeDataToFile(fileName, threadPool.getSorted());
     }
  
     // creamos los subarrays para los workers
     public static void createTasks(String[] bigArray) {
-        size = (int) Math.ceil((double) bigArray.length / nodes);
+        int size = (int) Math.ceil((double) bigArray.length / nodes);
 
         for (int i = 0; i < nodes; i++) {
             int start = i * size;
@@ -152,14 +161,12 @@ public class Master implements MasterInterface {
 
     @Override
     public void addPartialResult(String[] res, Current current) {
-        MergeSortedArrays merge = new MergeSortedArrays();
-        
         counter++;
+        //counterForSub += size;
 
         // añadimos la respuesta de los workers a sortedArrays
-        sortedArrays.add(res);
-
-        merge.mergeSortedArrays(sortedArrays);
+        //sortedArrays.add(res);
+        sorted.addAll(Arrays.asList(res));
 
         if (counter == nodes){
             sort(current);

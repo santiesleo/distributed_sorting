@@ -14,6 +14,6 @@ module TextSorter {
         void addPartialResult(StringSeq res);
         void detachWorker(WorkerInterface* subscriber);
         string getTask();
-        StringSeq sort();
+        void sort();
     }
 }

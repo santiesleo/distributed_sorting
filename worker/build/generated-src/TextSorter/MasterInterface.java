@@ -25,7 +25,7 @@ public interface MasterInterface extends com.zeroc.Ice.Object
 
     String getTask(com.zeroc.Ice.Current current);
 
-    String[] sort(com.zeroc.Ice.Current current);
+    void sort(com.zeroc.Ice.Current current);
 
     /** @hidden */
     static final String[] _iceIds =
@@ -134,11 +134,8 @@ public interface MasterInterface extends com.zeroc.Ice.Object
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         inS.readEmptyParams();
-        String[] ret = obj.sort(current);
-        com.zeroc.Ice.OutputStream ostr = inS.startWriteParams();
-        ostr.writeStringSeq(ret);
-        inS.endWriteParams(ostr);
-        return inS.setResult(ostr);
+        obj.sort(current);
+        return inS.setResult(inS.writeEmptyParams());
     }
 
     /** @hidden */

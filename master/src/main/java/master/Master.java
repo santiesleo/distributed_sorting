@@ -217,6 +217,7 @@ public class Master implements MasterInterface {
         for (int i = 0; i < subArrays.size(); i++) {
             System.out.println("envio a sortear al worker " + i);
             final int index = i;
+
             executor.submit(() -> {
                 workers.get(index).processTask(subArrays.get(index));
             });
@@ -239,10 +240,7 @@ public class Master implements MasterInterface {
     @Override
     public void addPartialResult(String[] res, Current current) {
         counter++;
-        //counterForSub += size;
-
-        // añadimos la respuesta de los workers a sortedArrays
-        //sortedArrays.add(res);
+        System.out.println("le llego partial result");
         sorted.addAll(Arrays.asList(res));
 
         if (counter == nodes) {

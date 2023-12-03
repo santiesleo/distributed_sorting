@@ -12,12 +12,10 @@ import java.util.concurrent.*;
 
 import TextSorter.WorkerInterfacePrx;
 import com.zeroc.Ice.*;
-
 import TextSorter.WorkerInterface;
 import threadPool.ThreadPool;
 
 public class Worker implements WorkerInterface {
-
     private static ThreadPool threadPool;
     private static Long startTime;
     private static TextSorter.MasterInterfacePrx masterInterfacePrx;
@@ -60,7 +58,7 @@ public class Worker implements WorkerInterface {
 
             // Apagar el Communicator cuando se cierre el servidor
             communicator.destroy();
-        } catch (com.zeroc.Ice.ObjectNotExistException ex) {     
+        } catch (com.zeroc.Ice.ObjectNotExistException ex) {
             ex.printStackTrace();
         }
     }
@@ -74,8 +72,9 @@ public class Worker implements WorkerInterface {
         System.out.println("Sort worker: " + (System.currentTimeMillis() - start));
 
         System.out.println("Sorted!");
-        unsubscribe();
+
         masterInterfacePrx.addPartialResult(sortedArr);
+        unsubscribe();
 
         boolean flag = true;
 
@@ -84,7 +83,7 @@ public class Worker implements WorkerInterface {
                     "\nb -> Apagar worker");
             String opt = reader.nextLine();
 
-            switch (opt){
+            switch (opt) {
                 case "a":
                     flag = false;
                     subscribe();
@@ -98,9 +97,9 @@ public class Worker implements WorkerInterface {
                     break;
             }
         }
-   }
+    }
 
-    public static void unsubscribe(){
+    public static void unsubscribe() {
         masterInterfacePrx.detachWorker(workerInterfacePrx);
     }
 
@@ -117,7 +116,7 @@ public class Worker implements WorkerInterface {
     public void processTask(String[] lines, Current current) {
         System.out.println("Sorting...");
         Worker.threadPool = new ThreadPool(lines);
-        
+
         try {
             threadPool.execute();
         } catch (InterruptedException | ExecutionException e) {

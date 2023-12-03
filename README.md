@@ -41,5 +41,5 @@ This project aims to design and implement a software system to address sorting c
 This project requires the following versions:
 
 - **JDK:** 11
-- **Zeroc ICE:** 3.7.6
+- **ZeroC ICE:** 3.7.6
 - **Gradle:** 1.4.5

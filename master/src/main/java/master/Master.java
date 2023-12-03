@@ -30,8 +30,6 @@ public class Master implements MasterInterface {
     private static long startSort;
     private static com.zeroc.Ice.Communicator globalCommunicator;
 
-
-
     public Master(int numThreads) {
         this.numThreads = numThreads;
         this.threads = new ArrayList<>();

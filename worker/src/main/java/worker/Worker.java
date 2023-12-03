@@ -21,9 +21,12 @@ public class Worker implements WorkerInterface {
     private static ThreadPool threadPool;
     private static Long startTime;
     private static TextSorter.MasterInterfacePrx masterInterfacePrx;
+    private static WorkerInterfacePrx workerInterfacePrx;
+    private static Scanner reader;
+    private static com.zeroc.Ice.Communicator globalCommunicator;
 
-    public static void main(String[] args) throws InterruptedException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args) {
+        reader = new Scanner(System.in);
 
         try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "worker.cfg")) {
             // communicator con propiedades de callback
@@ -40,9 +43,11 @@ public class Worker implements WorkerInterface {
             adapter.activate();
 
             // PRX de este worker
-            WorkerInterfacePrx workerInterfacePrx =
+            workerInterfacePrx =
                     WorkerInterfacePrx.uncheckedCast(adapter.createProxy(
                             com.zeroc.Ice.Util.stringToIdentity("Worker")));
+
+            globalCommunicator = communicator;
 
             startTime = System.currentTimeMillis();
 
@@ -50,9 +55,11 @@ public class Worker implements WorkerInterface {
             System.out.println("va a hacer attach");
             masterInterfacePrx.attachWorker(workerInterfacePrx);
 
-            while (true) {
-                Thread.sleep(1000); // Espera 1 segundo antes de volver a verificar
-            }
+            // Esperar a que se cierre el servidor
+            communicator.waitForShutdown();
+
+            // Apagar el Communicator cuando se cierre el servidor
+            communicator.destroy();
         } catch (com.zeroc.Ice.ObjectNotExistException ex) {     
             ex.printStackTrace();
         }
@@ -68,29 +75,46 @@ public class Worker implements WorkerInterface {
 
         System.out.println("Sorted!");
         masterInterfacePrx.addPartialResult(sortedArr);
+        unsubscribe();
 
-        //String outputFilePath = "doc/sorted_" + fileName;
-        // writeDataToFile(outputFilePath, sortedArr);
+        boolean flag = true;
 
-        //long endTime = System.currentTimeMillis();
-        //long latency = endTime - startTime;
+        while (flag) {
+            System.out.println("\na -> Conectarse nuevamente con Master" +
+                    "\nb -> Apagar worker");
+            String opt = reader.nextLine();
 
-        //System.out.println("Latencia de dist_sorter: " + latency + " milisegundos");
+            switch (opt){
+                case "a":
+                    flag = false;
+                    subscribe();
+                    break;
+                case "b":
+                    flag = false;
+                    globalCommunicator.shutdown();
+                    break;
+                default:
+                    System.out.println("Bad option");
+                    break;
+            }
+        }
    }
 
-    @Override
-    public void processTask(String task, Current current) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'processTask'");
+    public static void unsubscribe(){
+        masterInterfacePrx.detachWorker(workerInterfacePrx);
+    }
+
+    public static void subscribe() {
+        masterInterfacePrx.attachWorker(workerInterfacePrx);
     }
 
     @Override
     public void subscribe(Current current) {
-        
+        masterInterfacePrx.attachWorker(workerInterfacePrx);
     }
 
     @Override
-    public void sort(String[] lines, Current current) {
+    public void processTask(String[] lines, Current current) {
         System.out.println("Sorting...");
         Worker.threadPool = new ThreadPool(lines);
         

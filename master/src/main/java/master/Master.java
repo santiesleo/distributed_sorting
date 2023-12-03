@@ -1,5 +1,8 @@
 package master;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.concurrent.*;
 
 import com.zeroc.Ice.*;
@@ -25,7 +28,7 @@ public class Master implements MasterInterface {
     private static String[] arr;
     private static long startConn;
     private static long startSort;
-    private static boolean stopThreads = false;
+    private static com.zeroc.Ice.Communicator globalCommunicator;
 
 
 
@@ -45,6 +48,8 @@ public class Master implements MasterInterface {
         Scanner scanner = new Scanner(System.in);
         System.out.print("Ingrese el nombre del archivo de datos: ");
         fileName = scanner.nextLine();
+        Long pesoArchivo = obtenerPesoArchivo("doc/" + fileName);
+        System.out.println("El tamaño del archivo es: " + pesoArchivo + " bytes");
         arr = readDataFromFile("doc/" + fileName);
 
         // si nodos = 0 no sortea nada, mal input
@@ -81,6 +86,7 @@ public class Master implements MasterInterface {
 
                     // Imprimir mensaje indicando que el servidor está listo
                     System.out.println("Servidor 'Master' listo para recibir conexiones...");
+                    globalCommunicator = communicator;
 
                     // Esperar a que se cierre el servidor
                     communicator.waitForShutdown();
@@ -94,39 +100,66 @@ public class Master implements MasterInterface {
         }
     }
 
+    public static long obtenerPesoArchivo(String rutaArchivo) {
+        Path path = Paths.get(rutaArchivo);
+
+        try {
+            // Obtener el tamaño del archivo en bytes
+            return Files.size(path);
+        } catch (IOException e) {
+            // Manejar la excepción en caso de error al obtener el tamaño del archivo
+            e.printStackTrace();
+            return -1; // Valor negativo indica un error
+        }
+    }
+
     public static void menu() {
-        System.out.println("Selecciona la cantidad de nodos que deseas utilizar para ordenar: " +
-                "\na -> 1 nodo" +
-                "\nb -> 4 nodos" +
-                "\nc -> 8 nodos" +
-                "\nd -> 12 nodos");
-        String opt = reader.next();
+        boolean flag = true;
 
-        switch (opt) {
-            case "a":
-                nodes = 1;
-                break;
+        while (flag) {
+            System.out.println("Selecciona la cantidad de nodos que deseas utilizar para ordenar: " +
+                    "\na -> 1 nodo" +
+                    "\nb -> 4 nodos" +
+                    "\nc -> 8 nodos" +
+                    "\nd -> 12 nodos" +
+                    "\ne -> exit");
+            String opt = reader.next();
 
-            case "b":
-                nodes = 4;
-                break;
+            switch (opt) {
+                case "a":
+                    flag = false;
+                    nodes = 1;
+                    break;
 
-            case "c":
-                nodes = 8;
-                break;
+                case "b":
+                    flag = false;
+                    nodes = 4;
+                    break;
 
-            case "d":
-                nodes = 12;
-                break;
+                case "c":
+                    flag = false;
+                    nodes = 8;
+                    break;
 
-            case "t":
-                nodes = 2;
-                break;
+                case "d":
+                    flag = false;
+                    nodes = 12;
+                    break;
 
-            default:
-                System.out.println("Bad option");
-                nodes = 0;
-                break;
+                case "t":
+                    flag = false;
+                    nodes = 2;
+                    break;
+
+                case "e":
+                    flag = false;
+                    globalCommunicator.shutdown();
+                    break;
+
+                default:
+                    System.out.println("Bad option");
+                    break;
+            }
         }
     }
 
@@ -182,7 +215,7 @@ public class Master implements MasterInterface {
         for (int i = 0; i < subArrays.size(); i++) {
             final int index = i;
             executor.submit(() -> {
-                workers.get(index).sort(subArrays.get(index));
+                workers.get(index).processTask(subArrays.get(index));
             });
         }
 

@@ -3,9 +3,8 @@ module TextSorter {
     sequence<StringSeq> StringSeqSeq;
 
     interface WorkerInterface {
-        void processTask(string task);
         void subscribe();
-        void sort(StringSeq lines);
+        void processTask(StringSeq lines);
     };
 
     sequence<string> result;

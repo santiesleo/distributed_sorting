@@ -17,11 +17,9 @@ package TextSorter;
 
 public interface WorkerInterface extends com.zeroc.Ice.Object
 {
-    void processTask(String task, com.zeroc.Ice.Current current);
-
     void subscribe(com.zeroc.Ice.Current current);
 
-    void sort(String[] lines, com.zeroc.Ice.Current current);
+    void processTask(String[] lines, com.zeroc.Ice.Current current);
 
     /** @hidden */
     static final String[] _iceIds =
@@ -54,24 +52,6 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
      * @param current -
      * @return -
     **/
-    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_processTask(WorkerInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
-    {
-        com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
-        com.zeroc.Ice.InputStream istr = inS.startReadParams();
-        String iceP_task;
-        iceP_task = istr.readString();
-        inS.endReadParams();
-        obj.processTask(iceP_task, current);
-        return inS.setResult(inS.writeEmptyParams());
-    }
-
-    /**
-     * @hidden
-     * @param obj -
-     * @param inS -
-     * @param current -
-     * @return -
-    **/
     static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_subscribe(WorkerInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
@@ -87,14 +67,14 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
      * @param current -
      * @return -
     **/
-    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_sort(WorkerInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
+    static java.util.concurrent.CompletionStage<com.zeroc.Ice.OutputStream> _iceD_processTask(WorkerInterface obj, final com.zeroc.IceInternal.Incoming inS, com.zeroc.Ice.Current current)
     {
         com.zeroc.Ice.Object._iceCheckMode(null, current.mode);
         com.zeroc.Ice.InputStream istr = inS.startReadParams();
         String[] iceP_lines;
         iceP_lines = istr.readStringSeq();
         inS.endReadParams();
-        obj.sort(iceP_lines, current);
+        obj.processTask(iceP_lines, current);
         return inS.setResult(inS.writeEmptyParams());
     }
 
@@ -106,7 +86,6 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
         "ice_isA",
         "ice_ping",
         "processTask",
-        "sort",
         "subscribe"
     };
 
@@ -144,10 +123,6 @@ public interface WorkerInterface extends com.zeroc.Ice.Object
                 return _iceD_processTask(this, in, current);
             }
             case 5:
-            {
-                return _iceD_sort(this, in, current);
-            }
-            case 6:
             {
                 return _iceD_subscribe(this, in, current);
             }

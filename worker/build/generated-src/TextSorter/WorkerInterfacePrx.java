@@ -17,42 +17,6 @@ package TextSorter;
 
 public interface WorkerInterfacePrx extends com.zeroc.Ice.ObjectPrx
 {
-    default void processTask(String task)
-    {
-        processTask(task, com.zeroc.Ice.ObjectPrx.noExplicitContext);
-    }
-
-    default void processTask(String task, java.util.Map<String, String> context)
-    {
-        _iceI_processTaskAsync(task, context, true).waitForResponse();
-    }
-
-    default java.util.concurrent.CompletableFuture<Void> processTaskAsync(String task)
-    {
-        return _iceI_processTaskAsync(task, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
-    }
-
-    default java.util.concurrent.CompletableFuture<Void> processTaskAsync(String task, java.util.Map<String, String> context)
-    {
-        return _iceI_processTaskAsync(task, context, false);
-    }
-
-    /**
-     * @hidden
-     * @param iceP_task -
-     * @param context -
-     * @param sync -
-     * @return -
-     **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_processTaskAsync(String iceP_task, java.util.Map<String, String> context, boolean sync)
-    {
-        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "processTask", null, sync, null);
-        f.invoke(false, context, null, ostr -> {
-                     ostr.writeString(iceP_task);
-                 }, null);
-        return f;
-    }
-
     default void subscribe()
     {
         subscribe(com.zeroc.Ice.ObjectPrx.noExplicitContext);
@@ -86,24 +50,24 @@ public interface WorkerInterfacePrx extends com.zeroc.Ice.ObjectPrx
         return f;
     }
 
-    default void sort(String[] lines)
+    default void processTask(String[] lines)
     {
-        sort(lines, com.zeroc.Ice.ObjectPrx.noExplicitContext);
+        processTask(lines, com.zeroc.Ice.ObjectPrx.noExplicitContext);
     }
 
-    default void sort(String[] lines, java.util.Map<String, String> context)
+    default void processTask(String[] lines, java.util.Map<String, String> context)
     {
-        _iceI_sortAsync(lines, context, true).waitForResponse();
+        _iceI_processTaskAsync(lines, context, true).waitForResponse();
     }
 
-    default java.util.concurrent.CompletableFuture<Void> sortAsync(String[] lines)
+    default java.util.concurrent.CompletableFuture<Void> processTaskAsync(String[] lines)
     {
-        return _iceI_sortAsync(lines, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
+        return _iceI_processTaskAsync(lines, com.zeroc.Ice.ObjectPrx.noExplicitContext, false);
     }
 
-    default java.util.concurrent.CompletableFuture<Void> sortAsync(String[] lines, java.util.Map<String, String> context)
+    default java.util.concurrent.CompletableFuture<Void> processTaskAsync(String[] lines, java.util.Map<String, String> context)
     {
-        return _iceI_sortAsync(lines, context, false);
+        return _iceI_processTaskAsync(lines, context, false);
     }
 
     /**
@@ -113,9 +77,9 @@ public interface WorkerInterfacePrx extends com.zeroc.Ice.ObjectPrx
      * @param sync -
      * @return -
      **/
-    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_sortAsync(String[] iceP_lines, java.util.Map<String, String> context, boolean sync)
+    default com.zeroc.IceInternal.OutgoingAsync<Void> _iceI_processTaskAsync(String[] iceP_lines, java.util.Map<String, String> context, boolean sync)
     {
-        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "sort", null, sync, null);
+        com.zeroc.IceInternal.OutgoingAsync<Void> f = new com.zeroc.IceInternal.OutgoingAsync<>(this, "processTask", null, sync, null);
         f.invoke(false, context, null, ostr -> {
                      ostr.writeStringSeq(iceP_lines);
                  }, null);

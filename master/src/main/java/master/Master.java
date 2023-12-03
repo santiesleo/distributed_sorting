@@ -25,6 +25,9 @@ public class Master implements MasterInterface {
     private static String[] arr;
     private static long startConn;
     private static long startSort;
+    private static boolean stopThreads = false;
+
+
 
     public Master(int numThreads) {
         this.numThreads = numThreads;
@@ -173,11 +176,17 @@ public class Master implements MasterInterface {
 
     // enviamos a cada worker su respectivo subarray para que lo ordene
     public static void launchWorkers() {
-        // le manda a tantos workers como subarrays tiene
+        System.out.println("subarrays length: " + subArrays.size());
+        ExecutorService executor = Executors.newFixedThreadPool(16); // 16 hilos en el pool
+
         for (int i = 0; i < subArrays.size(); i++) {
-            workers.get(i).sort(subArrays.get(i));
+            final int index = i;
+            executor.submit(() -> {
+                workers.get(index).sort(subArrays.get(index));
+            });
         }
-        System.out.println("salio del for");
+
+        executor.shutdown(); // No aceptará nuevas tareas
     }
 
     @Override

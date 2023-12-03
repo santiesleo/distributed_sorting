@@ -23,6 +23,8 @@ public class Master implements MasterInterface {
     private static String fileName;
     private static Scanner reader;
     private static String[] arr;
+    private static long startConn;
+    private static long startSort;
 
     public Master(int numThreads) {
         this.numThreads = numThreads;
@@ -59,6 +61,7 @@ public class Master implements MasterInterface {
                     System.out.println(interruptedException.getMessage());
                 }
             } else {
+                startConn = System.currentTimeMillis();
                 // inicializamos ICE para conectarnos con los workers distribuidos
                 try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "master.cfg")) {
                     // communicator con propiedades de callback
@@ -113,6 +116,10 @@ public class Master implements MasterInterface {
                 nodes = 12;
                 break;
 
+            case "t":
+                nodes = 2;
+                break;
+
             default:
                 System.out.println("Bad option");
                 nodes = 0;
@@ -139,6 +146,9 @@ public class Master implements MasterInterface {
     }
 
     public static void notifySorted() {
+        System.out.println("Latencia sorted con conexión: " + (System.currentTimeMillis() - startConn) + "ms");
+        System.out.println("Latencia sorted (no conexión): " + (System.currentTimeMillis() - startSort) + "ms");
+
         String outputFilePath = "doc/sorted_" + fileName;
         writeDataToFile(outputFilePath, threadPool.getSorted());
     }
@@ -167,6 +177,7 @@ public class Master implements MasterInterface {
         for (int i = 0; i < subArrays.size(); i++) {
             workers.get(i).sort(subArrays.get(i));
         }
+        System.out.println("salio del for");
     }
 
     @Override
@@ -175,6 +186,7 @@ public class Master implements MasterInterface {
         System.out.println("\nWorker suscrito: " + subscriber.toString());
 
         if (workers.size() == nodes) {
+            startSort = System.currentTimeMillis();
             doProcess(arr);
         }
     }

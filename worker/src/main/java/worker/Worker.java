@@ -30,7 +30,7 @@ public class Worker implements WorkerInterface {
             communicator.getProperties().setProperty("Ice.Default.Package", "com.zeroc.demos.Ice.worker");
 
             // PRX del master
-            masterInterfacePrx = TextSorter.MasterInterfacePrx.uncheckedCast(communicator.propertyToProxy("MasterInterface.Proxy")).ice_twoway();
+            masterInterfacePrx = TextSorter.MasterInterfacePrx.uncheckedCast(communicator.propertyToProxy("MasterInterface.Proxy")).ice_oneway();
 
             // Crear el adaptador y agregar el objeto maestro
             ObjectAdapter adapter = communicator.createObjectAdapter("Worker");

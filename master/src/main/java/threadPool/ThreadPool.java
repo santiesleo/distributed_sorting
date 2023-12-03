@@ -49,11 +49,9 @@ public class ThreadPool {
             sortedSubArrs.add(future.get());
         }
 
-        System.out.println("\nFinal array sorted!");
         this.sortedArray = SortTask.mergeSortedArrays(sortedSubArrs);
         // notifique al master que ya acabó
         Master.notifySorted();
-
-        executor.shutdown();
+        executor.shutdownNow();
     }
 }

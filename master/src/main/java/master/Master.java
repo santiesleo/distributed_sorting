@@ -182,10 +182,13 @@ public class Master implements MasterInterface {
     }
 
     public static void notifySorted() {
+        System.out.println("\nFinal array sorted!");
         System.out.println("Latencia sorted con conexión: " + (System.currentTimeMillis() - startConn) + "ms");
         System.out.println("Latencia sorted (no conexión): " + (System.currentTimeMillis() - startSort) + "ms");
 
         String outputFilePath = "doc/sorted_" + fileName;
+        System.out.println("llama a escribir...");
+
         writeDataToFile(outputFilePath, threadPool.getSorted());
     }
 
@@ -221,7 +224,7 @@ public class Master implements MasterInterface {
             });
         }
 
-        executor.shutdown(); // No aceptará nuevas tareas
+        executor.shutdownNow(); // No aceptará nuevas tareas
     }
 
     @Override
@@ -251,6 +254,8 @@ public class Master implements MasterInterface {
 
     @Override
     public void detachWorker(WorkerInterfacePrx subscriber, Current current) {
+        // Destruir el objeto proxy del worker
+        subscriber.ice_getConnection().close(ConnectionClose.Forcefully);
         workers.remove(subscriber);
         System.out.println("\nWorker desuscrito: " + subscriber.toString());
     }
@@ -281,6 +286,8 @@ public class Master implements MasterInterface {
             for (String element : data) {
                 writer.write(element + "\n");
             }
+
+            System.out.println("terminó de escribir");
         } catch (IOException e) {
             e.printStackTrace();
         }

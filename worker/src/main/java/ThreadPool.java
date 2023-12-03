@@ -1,6 +1,3 @@
-package threadPool;
-
-import sort.SortTask;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -8,8 +5,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-
-import master.*;
 
 public class ThreadPool {
     private static final int THREAD_POOL_SIZE = 16;
@@ -49,9 +44,9 @@ public class ThreadPool {
             sortedSubArrs.add(future.get());
         }
 
+        executor.shutdown();
         this.sortedArray = SortTask.mergeSortedArrays(sortedSubArrs);
-        // notifique al master que ya acabó
-        Master.notifySorted();
-        executor.shutdownNow();
+        // notifique al main (cliente) que ya acabó
+        Worker.notifyClient();
     }
 }

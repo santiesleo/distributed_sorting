@@ -1,15 +1,11 @@
-package master;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.*;
 
 import com.zeroc.Ice.*;
-import com.zeroc.Ice.Exception;
 import TextSorter.MasterInterface;
 import TextSorter.WorkerInterfacePrx;
-import threadPool.ThreadPool;
 
 import java.io.*;
 import java.util.*;

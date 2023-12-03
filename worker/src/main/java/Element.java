@@ -1,5 +1,3 @@
-package element;
-
 public class Element implements Comparable<Element> {
         int array, index;
         String value;

@@ -1,7 +1,3 @@
-package threadPool;
-
-import worker.Worker;
-import sort.SortTask;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -48,9 +44,9 @@ public class ThreadPool {
             sortedSubArrs.add(future.get());
         }
 
-        executor.shutdown();
         this.sortedArray = SortTask.mergeSortedArrays(sortedSubArrs);
-        // notifique al main (cliente) que ya acabó
-        Worker.notifyClient();
+        // notifique al master que ya acabó
+        Master.notifySorted();
+        executor.shutdownNow();
     }
 }

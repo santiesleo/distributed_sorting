@@ -210,9 +210,11 @@ public class Master implements MasterInterface {
     // enviamos a cada worker su respectivo subarray para que lo ordene
     public static void launchWorkers() {
         System.out.println("subarrays length: " + subArrays.size());
+
         ExecutorService executor = Executors.newFixedThreadPool(16); // 16 hilos en el pool
 
         for (int i = 0; i < subArrays.size(); i++) {
+            System.out.println("envio a sortear al worker " + i);
             final int index = i;
             executor.submit(() -> {
                 workers.get(index).processTask(subArrays.get(index));

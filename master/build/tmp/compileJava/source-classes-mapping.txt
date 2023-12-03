@@ -14,11 +14,11 @@ TextSorter/_MasterInterfacePrxI.java
  TextSorter._MasterInterfacePrxI
 TextSorter/StringSeqSeqHelper.java
  TextSorter.StringSeqSeqHelper
+TextSorter/WorkerInterfacePrx.java
+ TextSorter.WorkerInterfacePrx
+element/Element.java
+ element.Element
 threadPool/ThreadPool.java
  threadPool.ThreadPool
 master/Master.java
  master.Master
-element/Element.java
- element.Element
-TextSorter/WorkerInterfacePrx.java
- TextSorter.WorkerInterfacePrx

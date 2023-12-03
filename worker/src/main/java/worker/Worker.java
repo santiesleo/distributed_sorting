@@ -71,11 +71,11 @@ public class Worker implements WorkerInterface {
         // obtiene el array ordenado
         long start = System.currentTimeMillis();
         String[] sortedArr = threadPool.getSorted();
-        System.out.println("Sort worker: " + (System.currentTimeMillis()-start));
+        System.out.println("Sort worker: " + (System.currentTimeMillis() - start));
 
         System.out.println("Sorted!");
-        masterInterfacePrx.addPartialResult(sortedArr);
         unsubscribe();
+        masterInterfacePrx.addPartialResult(sortedArr);
 
         boolean flag = true;
 

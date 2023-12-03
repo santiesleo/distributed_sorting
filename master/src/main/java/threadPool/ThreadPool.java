@@ -50,7 +50,7 @@ public class ThreadPool {
         }
 
         executor.shutdown();
-        System.out.println("\nFinal array sorted!");
+        System.out.println("\nFinal array sorted!");s
         this.sortedArray = SortTask.mergeSortedArrays(sortedSubArrs);
         // notifique al main (cliente) que ya acabó
         Master.notifySorted();

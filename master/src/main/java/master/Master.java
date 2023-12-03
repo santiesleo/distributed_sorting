@@ -53,7 +53,7 @@ public class Master implements MasterInterface {
                     //Medición
                     long start = System.currentTimeMillis();
                     threadPool.execute();
-                    System.out.println("Sort monolitico: " + (System.currentTimeMillis() - start));
+                    System.out.println("Sort monolitico: " + (System.currentTimeMillis() - start) + "ms");
 
                 } catch (InterruptedException | ExecutionException interruptedException) {
                     System.out.println(interruptedException.getMessage());
@@ -207,13 +207,12 @@ public class Master implements MasterInterface {
     private static String[] readDataFromFile(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             String line;
-            StringBuilder content = new StringBuilder();
+            List<String> words = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
-                content.append(line).append("\n");
+                words.addAll(Arrays.asList(line.trim().split("\\s+")));
             }
-
-            return content.toString().trim().split("\\s+");
+            return words.toArray(new String[0]);
         } catch (IOException e) {
             e.printStackTrace();
             return new String[0];

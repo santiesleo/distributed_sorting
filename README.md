@@ -4,10 +4,10 @@
 
 ### **Authors** ✒️
 
-- Dylan Bermúdez Cardona - A00381287
-- Santiago Escobar León - A00382203
-- Daniel Montezuma Sevillano - A00382231
-- Diego Fernando Mueses Zúñiga - A00382021
+- Dylan Bermúdez Cardona
+- Santiago Escobar León
+- Daniel Montezuma Sevillano
+- Diego Fernando Mueses Zúñiga
 
 ### **Project Objectives**
 

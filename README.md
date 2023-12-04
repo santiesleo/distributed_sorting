@@ -69,7 +69,7 @@ Open the console on xhgrid7 and create a new folder (with a name of your choice)
 mkdir new_folder
 ```
 
-On computer xhgrid7, go to /path/to/created/folder/
+On computer xhgrid7, go to `/path/to/created/folder/`
 
 Run the `pwd` command on xhgrid7 and copy the path.
 

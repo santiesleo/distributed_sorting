@@ -24,7 +24,10 @@ public class Master implements MasterInterface {
     private static String[] arr;
     private static long startConn;
     private static long startSort;
+    private static long startMon;
     private static com.zeroc.Ice.Communicator globalCommunicator;
+    private static String[] args;
+    private static final double MS_PER_BYTE = 0.000018;
 
     public Master(int numThreads) {
         this.numThreads = numThreads;
@@ -36,62 +39,9 @@ public class Master implements MasterInterface {
 
     public static void main(String[] args) {
         reader = new Scanner(System.in);
+        Master.args = args;
 
         menu();
-
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Ingrese el nombre del archivo de datos: ");
-        fileName = scanner.nextLine();
-        Long pesoArchivo = obtenerPesoArchivo("doc/" + fileName);
-        System.out.println("El tamaño del archivo es: " + pesoArchivo + " bytes");
-        arr = readDataFromFile("doc/" + fileName);
-
-        // si nodos = 0 no sortea nada, mal input
-        if (nodes != 0) {
-
-            // si nodos = 1 lo sorteo aqui mismo, monolítico
-            if (nodes == 1) {
-                threadPool = new ThreadPool(arr);
-
-                try {
-                    //Medición
-                    long start = System.currentTimeMillis();
-                    threadPool.execute();
-                    System.out.println("Sort monolitico: " + (System.currentTimeMillis() - start) + "ms");
-
-                } catch (InterruptedException | ExecutionException interruptedException) {
-                    System.out.println(interruptedException.getMessage());
-                }
-            } else {
-                startConn = System.currentTimeMillis();
-                // inicializamos ICE para conectarnos con los workers distribuidos
-                try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "master.cfg")) {
-                    // communicator con propiedades de callback
-                    communicator.getProperties().setProperty("Ice.Default.Package",
-                            "TextSorter");
-
-                    // Crear el adaptador y agregar el objeto maestro - Los nombres son arbitrarios
-                    // los colocamos por convención
-                    ObjectAdapter adapter = communicator.createObjectAdapter("Master");
-                    Master master = new Master(16);
-
-                    adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("Master"));
-                    adapter.activate();
-
-                    // Imprimir mensaje indicando que el servidor está listo
-                    System.out.println("Servidor 'Master' listo para recibir conexiones...");
-                    globalCommunicator = communicator;
-
-                    // Esperar a que se cierre el servidor
-                    communicator.waitForShutdown();
-
-                    // Apagar el Communicator cuando se cierre el servidor
-                    communicator.destroy();
-                } catch (com.zeroc.Ice.ObjectNotExistException ex) {
-                    ex.printStackTrace();
-                }
-            }
-        }
     }
 
     public static long obtenerPesoArchivo(String rutaArchivo) {
@@ -107,15 +57,25 @@ public class Master implements MasterInterface {
         }
     }
 
+    public static void fileMenu() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Ingrese el nombre del archivo de datos: ");
+        fileName = scanner.nextLine();
+        Long pesoArchivo = obtenerPesoArchivo("doc/" + fileName);
+        System.out.println("El tamaño del archivo es: " + pesoArchivo + " bytes");
+        arr = readDataFromFile("doc/" + fileName);
+    }
+
     public static void menu() {
         boolean flag = true;
 
         while (flag) {
-            System.out.println("Selecciona la cantidad de nodos que deseas utilizar para ordenar: " +
+            System.out.println("\nSelecciona la cantidad de nodos que deseas utilizar para ordenar: " +
                     "\na -> 1 nodo" +
                     "\nb -> 4 nodos" +
                     "\nc -> 8 nodos" +
                     "\nd -> 12 nodos" +
+                    "\nt -> 2 nodos" +
                     "\ne -> exit");
             String opt = reader.next();
 
@@ -155,6 +115,55 @@ public class Master implements MasterInterface {
                     break;
             }
         }
+
+        fileMenu();
+
+        // si nodos = 0 no sortea nada, mal input
+        if (nodes != 0) {
+
+            // si nodos = 1 lo sorteo aqui mismo, monolítico
+            if (nodes == 1) {
+                threadPool = new ThreadPool(arr);
+
+                try {
+                    //Medición
+                    startMon = System.currentTimeMillis();
+                    threadPool.execute();
+                } catch (InterruptedException | ExecutionException interruptedException) {
+                    System.out.println(interruptedException.getMessage());
+                }
+            } else {
+                startConn = System.currentTimeMillis();
+                // inicializamos ICE para conectarnos con los workers distribuidos
+                try (com.zeroc.Ice.Communicator communicator = com.zeroc.Ice.Util.initialize(args, "master.cfg")) {
+                    // communicator con propiedades de callback
+                    communicator.getProperties().setProperty("Ice.Default.Package",
+                            "TextSorter");
+
+                    // Crear el adaptador y agregar el objeto maestro - Los nombres son arbitrarios
+                    // los colocamos por convención
+                    ObjectAdapter adapter = communicator.createObjectAdapter("Master");
+                    Master master = new Master(16);
+
+                    adapter.add(master, com.zeroc.Ice.Util.stringToIdentity("Master"));
+                    adapter.activate();
+
+                    // Imprimir mensaje indicando que el servidor está listo
+                    System.out.println("Servidor 'Master' listo para recibir conexiones...");
+                    globalCommunicator = communicator;
+
+                    // Esperar a que se cierre el servidor
+                    communicator.waitForShutdown();
+
+                    // Apagar el Communicator cuando se cierre el servidor
+                    communicator.destroy();
+                } catch (com.zeroc.Ice.ObjectNotExistException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            menu();
+        }
     }
 
     public static void doProcess(String[] arrayToSort) {
@@ -177,13 +186,23 @@ public class Master implements MasterInterface {
 
     public static void notifySorted() {
         System.out.println("\nFinal array sorted!");
-        System.out.println("Latencia sorted con conexión: " + (System.currentTimeMillis() - startConn) + "ms");
-        System.out.println("Latencia sorted (no conexión): " + (System.currentTimeMillis() - startSort) + "ms");
+
+        if (nodes != 1) {
+            System.out.println("Latencia sorted con conexión: " + (System.currentTimeMillis() - startConn) + "ms");
+            System.out.println("Latencia sorted (no conexión): " + (System.currentTimeMillis() - startSort) + "ms");
+        } else {
+            System.out.println("Sort monolítico: " + (System.currentTimeMillis() - startMon) + "ms");
+        }
+
+        subArrays = new ArrayList<>();
+        sorted = new ArrayList<>();
 
         String outputFilePath = "doc/sorted_" + fileName;
         System.out.println("llama a escribir...");
 
         writeDataToFile(outputFilePath, threadPool.getSorted());
+        menu();
+        fileMenu();
     }
 
     // creamos los subarrays para los workers
@@ -206,8 +225,6 @@ public class Master implements MasterInterface {
 
     // enviamos a cada worker su respectivo subarray para que lo ordene
     public static void launchWorkers() {
-        System.out.println("subarrays length: " + subArrays.size());
-
         ExecutorService executor = Executors.newFixedThreadPool(16); // 16 hilos en el pool
 
         for (int i = 0; i < subArrays.size(); i++) {
@@ -229,6 +246,7 @@ public class Master implements MasterInterface {
 
         if (workers.size() == nodes) {
             startSort = System.currentTimeMillis();
+
             doProcess(arr);
         }
     }

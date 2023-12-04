@@ -33,11 +33,11 @@ This project aims to design and implement a software system to address sorting c
 
 For this demonstration, we will use a project with two subprojects to build the Master and Worker applications.
 
-Make sure to have the 'distributed_sorting.zip' file on your computer.
+Make sure to have the `distributed_sorting.zip` file on your computer.
 
-Unzip the 'distributed_sorting.zip' file on your computer.
+Unzip the `distributed_sorting.zip` file on your computer.
 
-Package the 'master' and 'worker' directories located inside 'distributed_sorting' into a .zip file.
+Package the `master` and `worker` directories located inside `distributed_sorting` into a .zip file.
 
 To connect remotely to the computer, execute the following SSH command:
 

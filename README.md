@@ -35,10 +35,6 @@ For this demonstration, we will use a project with two subprojects to build the 
 
 Make sure to have the `distributed_sorting.zip` file on your computer.
 
-Unzip the `distributed_sorting.zip` file on your computer.
-
-Package the `master` and `worker` directories located inside `distributed_sorting` into a .zip file.
-
 To connect remotely to the computer, execute the following SSH command:
 
 ```bash
@@ -73,19 +69,19 @@ On computer xhgrid7, go to `/path/to/created/folder/`
 
 Run the `pwd` command on xhgrid7 and copy the path.
 
-Transfer the `master` file in .zip format located on your computer. To do this, execute the following command:
+Transfer the `distributed_sorting` file in .zip format located on your computer. To do this, execute the following command:
 
 ```bash
 scp master.zip swarch@xhgrid7:/path/to/created/folder/
 ```
 
-Unzip `master.zip` by running the following command:
+Unzip `distributed_sorting.zip` by running the following command:
 
 ```bash
-unzip master.zip
+unzip distributed_sorting.zip
 ```
 
-On xhgrid7, go to the path `/path/master/`. Then, execute the following command:
+On xhgrid7, go to the path `/path/distributed_sorting/`. Then, execute the following command:
 
 ```bash
 gradle build
@@ -141,19 +137,19 @@ On computer xhgrid8, go to /path/to/created/folder/
 
 Run the `pwd` command on xhgrid8 and copy the path.
 
-Transfer the `worker` file in .zip format located on your computer. To do this, execute the following command:
+Transfer the `distributed_sorting` file in .zip format located on your computer. To do this, execute the following command:
 
 ```bash
-scp worker.zip swarch@xhgrid8:/path/to/created/folder/
+scp distributed_sorting.zip swarch@xhgrid8:/path/to/created/folder/
 ```
 
-Unzip `worker.zip` by running the following command:
+Unzip `distributed_sorting.zip` by running the following command:
 
 ```bash
-unzip worker.zip
+unzip distributed_sorting.zip
 ```
 
-On xhgrid8, go to the path `/path/worker/`. Then, execute the following command:
+On xhgrid8, go to the path `/path/distributed_sorting/`. Then, execute the following command:
 
 ```bash
 gradle build

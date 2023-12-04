@@ -29,101 +29,101 @@ OT4. Define the global structure of the code based on the architectural design f
 
 This project aims to design and implement a software system to address sorting challenges in large datasets through distributed sorting. The system includes a client that requests the data file name and invokes the distributed component (`dist_sorter`). The latter implements a distributed sorting strategy, combining various design patterns, with precise measurements of processing time and data transfer between nodes. Experiments are conducted by varying the number of machines and sorters, assessing performance in distributed configurations. The goal is to determine when distributing the process becomes advantageous and to evaluate the system's capacity. The results are presented in a ZIP file containing a deployment diagram, source code, compilation instructions, and a report featuring a table and comparative analysis of execution times versus data sizes, highlighting the improvements achieved in distributed performance compared to the monolithic execution.
 
-### **Configuración** ⚙️
+### **Configuration** ⚙️
 
-Para esta demostración, utilizaremos un proyecto con dos subproyectos para construir las aplicaciones Master y Worker.
+For this demonstration, we will use a project with two subprojects to build the Master and Worker applications.
 
-Asegúrese de tener el archivo 'distributed_sorting.zip' en su computadora.
+Make sure to have the 'distributed_sorting.zip' file on your computer.
 
-Descomprima el archivo 'distributed_sorting.zip' en su computadora.
+Unzip the 'distributed_sorting.zip' file on your computer.
 
-Empaquete los directorios 'master' y 'worker' que se encuentran dentro de 'distributed_sorting' en un archivo .zip.
+Package the 'master' and 'worker' directories located inside 'distributed_sorting' into a .zip file.
 
-Para conectarse de forma remota a la computadora, ejecute el siguiente comando SSH:
+To connect remotely to the computer, execute the following SSH command:
 
 ```bash
-ssh swarch@xhgrid# (contraseña: swarch)
+ssh swarch@xhgrid# (password: swarch)
 ```
 
-***Siendo '#' el número de la computadora a la cual se quiere conectar.***
+***Where '#' is the number of the computer you want to connect to.***
 
-Ejecute el comando `ifconfig` en cada xhgrid# y tome nota (o recuerde) de la dirección IPV4 de cada computadora. Esta información será útil más adelante.
+Run the `ifconfig` command on each xhgrid# and take note (or remember) of the IPV4 address of each computer. This information will be useful later.
 
-Para este ejemplo, nos conectaremos a dos computadoras para desplegar un Master y un Worker:
+For this example, we will connect to two computers to deploy a Master and a Worker:
 
 **Master:**
 ```bash
-ssh swarch@xhgrid7 (contraseña: swarch)
+ssh swarch@xhgrid7 (password: swarch)
 ```
 
 **Worker:**
 ```bash
-ssh swarch@xhgrid8 (contraseña: swarch)
+ssh swarch@xhgrid8 (password: swarch)
 ```
 
 **1. Master**
 
-Abra la consola en xhgrid7 y cree una nueva carpeta (con un nombre de su elección) en esa ruta.
+Open the console on xhgrid7 and create a new folder (with a name of your choice) in that path.
 
 ```bash
-mkdir nueva_carpeta
+mkdir new_folder
 ```
 
-En la computadora xhgrid7, vaya a /ruta/a/carpeta/creada/
+On computer xhgrid7, go to /path/to/created/folder/
 
-Ejecute el comando `pwd` en xhgrid7 y copie la ruta.
+Run the `pwd` command on xhgrid7 and copy the path.
 
-Realice la transferencia en formato .zip del archivo `master` ubicado en la ruta de su computadora. Para hacerlo, ejecute el siguiente comando:
+Transfer the `master` file in .zip format located on your computer. To do this, execute the following command:
 
 ```bash
-scp master.zip swarch@xhgrid7:/ruta/a/carpeta/creada/
+scp master.zip swarch@xhgrid7:/path/to/created/folder/
 ```
 
-Descomprima `master.zip` ejecutando el siguiente comando:
+Unzip `master.zip` by running the following command:
 
 ```bash
 unzip master.zip
 ```
 
-En xhgrid7, vaya a la ruta `/ruta/master/`. Luego, ejecute el siguiente comando:
+On xhgrid7, go to the path `/path/master/`. Then, execute the following command:
 
 ```bash
 gradle build
 ```
 
-Vaya a `/ruta/distributed_sorting/master/build/libs/`
+Go to `/path/distributed_sorting/master/build/libs/`
 
-Ejecute el siguiente comando:
+Execute the following command:
 
 ```bash
 mc
 ```
 
-Use las flechas del teclado para seleccionar el archivo llamado `master.jar` y presione la tecla `Enter`.
+Use the keyboard arrows to select the file named `master.jar` and press the `Enter` key.
 
-Use las flechas del teclado para seleccionar el archivo llamado `master.cfg` y presione la tecla `F4`.
+Use the keyboard arrows to select the file named `master.cfg` and press the `F4` key.
 
-Presione la tecla `i`.
+Press the `i` key.
 
-Cambie la siguiente línea de código:
+Change the following line of code:
 
 ```bash
 Master.Endpoints = default -h localhost -p 10000
 ```
 
-a
+to
 
 ```bash
 Master.Endpoints = default -h IPV4_xhgrid7 -p 10000
 ```
 
-Donde `IPV4_xhgrid7` indica la IPV4 obtenida previamente de la computadora xhgrid7.
+Where `IPV4_xhgrid7` indicates the previously obtained IPV4 from computer xhgrid7.
 
-Presione la tecla `Esc` y luego escriba `:x` y presione `Enter`.
+Press the `Esc` key and then type `:x` and press `Enter`.
 
-Vaya a `/..` con las flechas del teclado. Presione `Enter`.
+Go to `/..` with the keyboard arrows. Press `Enter`.
 
-Luego, ejecute el siguiente comando:
+Then, run the following command:
 
 ```bash
 java -jar master.jar
@@ -131,75 +131,75 @@ java -jar master.jar
 
 **2. Worker**
 
-Abra la consola en xhgrid8 y cree una nueva carpeta (con un nombre de su elección) en esa ruta.
+Open the console on xhgrid8 and create a new folder (with a name of your choice) in that path.
 
 ```bash
-mkdir nueva_carpeta
+mkdir new_folder
 ```
 
-En la computadora xhgrid8, vaya a /ruta/a/carpeta/creada/
+On computer xhgrid8, go to /path/to/created/folder/
 
-Ejecute el comando `pwd` en xhgrid8 y copie la ruta.
+Run the `pwd` command on xhgrid8 and copy the path.
 
-Realice la transferencia en formato .zip del archivo `worker` ubicado en la ruta de su computadora. Para hacerlo, ejecute el siguiente comando:
+Transfer the `worker` file in .zip format located on your computer. To do this, execute the following command:
 
 ```bash
-scp worker.zip swarch@xhgrid8:/ruta/a/carpeta/creada/
+scp worker.zip swarch@xhgrid8:/path/to/created/folder/
 ```
 
-Descomprima `worker.zip` ejecutando el siguiente comando:
+Unzip `worker.zip` by running the following command:
 
 ```bash
 unzip worker.zip
 ```
 
-En xhgrid8, vaya a la ruta `/ruta/worker/`. Luego, ejecute el siguiente comando:
+On xhgrid8, go to the path `/path/worker/`. Then, execute the following command:
 
 ```bash
 gradle build
 ```
 
-Vaya a `/ruta/worker/build/libs/`
+Go to `/path/worker/build/libs/`
 
-Ejecute el siguiente comando:
+Execute the following command:
 
 ```bash
 mc
 ```
 
-Use las flechas del teclado para seleccionar el archivo llamado `worker.jar` y presione la tecla `Enter`.
+Use the keyboard arrows to select the file named `worker.jar` and press the `Enter` key.
 
-Use las flechas del teclado para seleccionar el archivo llamado `worker.cfg` y presione la tecla `F4`.
+Use the keyboard arrows to select the file named `worker.cfg` and press the `F4` key.
 
-Presione la tecla `i`.
+Press the `i` key.
 
-Cambie la siguiente línea de código:
+Change the following lines of code:
 
 ```bash
 Worker.Endpoints = default -h localhost -p 10001
 MasterInterface.Proxy = Master:default -h localhost -p 10000
 ```
 
-a
+to
 
 ```bash
 Worker.Endpoints = default -h IPV4_xhgrid8 -p 10001
 MasterInterface.Proxy = Master:default -h IPV4_xhgrid7 -p 10000
 ```
 
-Donde `IPV4_xhgrid8` indica la IPV4 obtenida previamente de la computadora xhgrid8. Y `IPV4_xhgrid7` indica la IPV4 obtenida previamente de la computadora xhgrid7.
+Where `IPV4_xhgrid8` indicates the previously obtained IPV4 from computer xhgrid8. And `IPV4_xhgrid7` indicates the previously obtained IPV4 from computer xhgrid7.
 
-Presione la tecla `Esc` y luego escriba `:x` y presione `Enter`.
+Press the `Esc` key and then type `:x` and press `Enter`.
 
-Vaya a `/..` con las flechas del teclado. Presione `Enter`.
+Go to `/..` with the keyboard arrows. Press `Enter`.
 
-Luego, ejecute el siguiente comando:
+Then, run the following command:
 
 ```bash
 java -jar worker.jar
 ```
 
-***Nota:*** El proceso de desplegar **workers** se ejecuta cuantas veces sea necesario.
+***Note:*** The process of deploying **workers** is executed as many times as necessary.
 
 ### **Build With** 🛠️
 
